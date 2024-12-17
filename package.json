@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "build": "next build",
+    "build": "node myscript.js && next build",
     "dev": "next dev --turbo",
     "start": "next start",
     "lint": "next lint"
@@ -13,6 +13,7 @@
     "autoprefixer": "10.4.19",
     "bcrypt": "^5.1.1",
     "clsx": "^2.1.1",
+    "googleapis": "^144.0.0",
     "next": "15.0.2-canary.6",
     "next-auth": "5.0.0-beta.25",
     "postcss": "8.4.38",
@@ -37,5 +38,8 @@
       "@types/react": "npm:types-react@19.0.0-rc.1",
       "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
     }
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
