@@ -12,8 +12,8 @@ export async function getSheetData() : Promise<SheetsOutputFormat> {
             "type": process.env.type,
             "project_id": process.env.project_id,
             "private_key_id": process.env.private_key_id,
-            "private_key": process.env.private_key,
-            "client_email": process.env.client_email,
+            "private_key": Buffer.from(process.env.private_key as string, 'base64').toString('ascii'),
+            "client_email": Buffer.from(process.env.client_email as string, 'base64').toString('ascii'),
             "universe_domain": process.env.universe_domain
         },
         scopes: ["https://www.googleapis.com/auth/spreadsheets"],
@@ -22,7 +22,7 @@ export async function getSheetData() : Promise<SheetsOutputFormat> {
     const glSheets = google.sheets({ version: "v4", auth: glAuth });
 
     const data = await glSheets.spreadsheets.values.get({
-        spreadsheetId: "1lXEpbhvrI7XL6g5kPScobm1Nmbj_MgMUe_Zevl7n8vA",
+        spreadsheetId: process.env.spreadsheet_id,
         range: 'Public volunteer assignments!A2:J74',
     });
 
