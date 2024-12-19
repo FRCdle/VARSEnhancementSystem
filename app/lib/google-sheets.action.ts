@@ -1,7 +1,11 @@
 'use server';
 import { google } from "googleapis";
 
-export async function getSheetData() {
+export interface SheetsOutputFormat {
+    data: string[][]
+}
+
+export async function getSheetData() : Promise<SheetsOutputFormat> {
   const glAuth = await google.auth.getClient({
         projectId: process.env.project_id,
         credentials: {
@@ -19,8 +23,8 @@ export async function getSheetData() {
 
     const data = await glSheets.spreadsheets.values.get({
         spreadsheetId: "1lXEpbhvrI7XL6g5kPScobm1Nmbj_MgMUe_Zevl7n8vA",
-        range: 'Volunteer panel!A2:J74',
+        range: 'Public volunteer assignments!A2:J74',
     });
 
-    return { data: data.data.values };
+    return { data: <string[][]> data.data.values };
 }

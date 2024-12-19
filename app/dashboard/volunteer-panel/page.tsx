@@ -1,10 +1,23 @@
+"use client";
 import { getSheetData } from "@/app/lib/google-sheets.action";
 import { Button } from "@/app/ui/button";
+import { useEffect, useState } from "react";
 
-export default async function Page() {
-  let data : any = await getSheetData();
-  data = data.data;
-//   console.log(data);
+export default function Page() {
+  interface SheetFormat {
+    data: string[][]
+  }
+  
+  const [data, setData] = useState<SheetFormat>();
+  const [refreshToken, setRefreshToken] = useState(Math.random());
+  
+  useEffect(() => {
+    getSheetData()
+      .then((data) => setData(data))
+      .finally(() => {
+        setTimeout(() => setRefreshToken(Math.random()), 500);
+      });
+  }, [refreshToken]);
 
   return(
   <div className="text-xs">
@@ -14,7 +27,7 @@ export default async function Page() {
       </h1>
 
       <div className="flex flex-col">
-        {data.map((row : any, rowKey : any) => (
+        {data?.data.map((row : any, rowKey : any) => (
           <div
             className={`${row[0] === "" ? 'bg-slate-200' : '' } grid grid-cols-10 sm:grid-cols-10`}
             key={rowKey}
