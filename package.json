@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "build": "node myscript.js && next build",
+    "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start",
     "lint": "next lint"

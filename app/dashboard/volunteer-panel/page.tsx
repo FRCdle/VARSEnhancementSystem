@@ -1,4 +1,4 @@
-import { getSheetData } from "@/app/actions/google-sheets.action";
+import { getSheetData } from "@/app/lib/google-sheets.action";
 import { Button } from "@/app/ui/button";
 
 export default async function Page() {
