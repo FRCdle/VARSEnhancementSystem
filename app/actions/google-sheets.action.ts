@@ -1,8 +1,7 @@
 'use server';
 import { google } from "googleapis";
 
-export async function getSheetData() { 
-    console.log(process.env.private_key);
+export async function getSheetData() {
   const glAuth = await google.auth.getClient({
         projectId: process.env.project_id,
         credentials: {
@@ -10,7 +9,7 @@ export async function getSheetData() {
             "project_id": process.env.project_id,
             "private_key_id": process.env.private_key_id,
             "private_key": process.env.private_key,
-            "client_email": "vars-reader@vars-enhancement-system.iam.gserviceaccount.com",
+            "client_email": process.env.client_email,
             "universe_domain": process.env.universe_domain
         },
         scopes: ["https://www.googleapis.com/auth/spreadsheets"],
