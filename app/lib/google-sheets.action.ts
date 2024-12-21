@@ -23,7 +23,7 @@ export async function getSheetData() : Promise<SheetsOutputFormat> {
 
     const data = await glSheets.spreadsheets.values.get({
         spreadsheetId: process.env.spreadsheet_id,
-        range: 'Public volunteer assignments!A2:J74',
+        range: 'Public volunteer assignments!A2:J75',
     });
 
     return { data: <string[][]> data.data.values };

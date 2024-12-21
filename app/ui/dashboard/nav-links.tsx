@@ -22,8 +22,8 @@ const links = [
     icon: UserGroupIcon 
   },
   {
-    name: 'Invoices',
-    href: '/dashboard/invoices',
+    name: 'Badges',
+    href: '/dashboard/badges',
     icon: DocumentDuplicateIcon,
   },
 ];
