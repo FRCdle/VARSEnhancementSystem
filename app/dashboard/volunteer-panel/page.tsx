@@ -1,18 +1,15 @@
 "use client";
-import { getSheetData } from "@/app/lib/google-sheets.action";
+import { getSheetData, getHomePanel } from "@/app/lib/google-sheets.action";
 import { Button } from "@/app/ui/button";
 import { useEffect, useState } from "react";
 
 export default function Page() {
-  interface SheetFormat {
-    data: string[][]
-  }
-  
-  const [data, setData] = useState<SheetFormat>();
+
+  const [data, setData] = useState<string[][]>();
   const [refreshToken, setRefreshToken] = useState(Math.random());
   
   useEffect(() => {
-    getSheetData()
+    getHomePanel()
       .then((data) => setData(data))
       .finally(() => {
         setTimeout(() => setRefreshToken(Math.random()), 3000); // refresh rate in milliseconds
@@ -26,7 +23,7 @@ export default function Page() {
     </h1>
     <div className="text-xs rounded-sme bg-white px-5 pb-2.5 pt-6 shadow-default sm:px-7.5 xl:pb-1">
       <div className="flex flex-col">
-        {data?.data.map((row : string[], rowKey : number) => (
+        {data?.map((row : string[], rowKey : number) => (
           <div
             className={`${row[0] === "" ? 'bg-slate-200' : '' } grid grid-cols-10 sm:grid-cols-10`}
             key={rowKey}
@@ -42,5 +39,3 @@ export default function Page() {
     </div>
   </div>);
 }
-
-
