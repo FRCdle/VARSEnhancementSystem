@@ -22,10 +22,10 @@ const links = [
     icon: UserGroupIcon 
   },
   {
-    name: 'Badges',
-    href: '/dashboard/badges',
+    name: 'BulkBadge',
+    href: '/dashboard/bulkbadge',
     icon: DocumentDuplicateIcon,
-  },
+  }
 ];
 
 export default function NavLinks() {
