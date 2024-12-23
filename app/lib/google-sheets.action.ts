@@ -26,5 +26,5 @@ export async function getSheetData(spreadsheetRange: string) : Promise<string[][
 }
 
 export async function getHomePanel() : Promise<string[][]> {
-    return getSheetData('Home!A2:K34');
+    return getSheetData('Home!A1:K34');
 }
