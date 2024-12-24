@@ -30,7 +30,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-8 shadow-2xl sm:px-7.5 xl:col-span-7">
+      <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-7">
         <div className="mb-3 justify-between gap-4 sm:flex">
           <h5 className="text-xl font-semibold text-black dark:text-white">
             Event Configuration

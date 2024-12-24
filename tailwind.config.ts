@@ -12,11 +12,8 @@ const config: Config = {
         '13': 'repeat(13, minmax(0, 1fr))',
       },
       colors: {
-        blue: {
-          400: '#2589FE',
-          500: '#0070F3',
-          600: '#2F6FEB',
-        },
+        'sidenav-color' : '#1E2433',
+        'sidenav-color-hover' : '#343A47'
       },
       fontSize: {
         'tiny': '0.7rem',
