@@ -1,5 +1,4 @@
 import LoginForm from '@/app/ui/login-form';
-import GAFirstLogo from '../ui/ga-first-logo';
  
 export default function LoginPage() {
   return (

@@ -22,7 +22,7 @@ export default function Page() {
       Home
     </h1>
     <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-      <div className="col-span-12 rounded-sm border border-stroke bg-slate-100 px-5 pb-5 pt-8 shadow-default sm:px-7.5 xl:col-span-5">
+      <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-5">
         <div className="mb-3 justify-between gap-4 sm:flex">
           <h5 className="text-xl text-black dark:text-white">
             Hotel Services
@@ -30,23 +30,29 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="col-span-12 rounded-sm border border-stroke bg-slate-100 px-5 pb-5 pt-8 shadow-default sm:px-7.5 xl:col-span-7">
+      <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-8 shadow-2xl sm:px-7.5 xl:col-span-7">
         <div className="mb-3 justify-between gap-4 sm:flex">
-          <h5 className="text-xl text-black dark:text-white">
+          <h5 className="text-xl font-semibold text-black dark:text-white">
             Event Configuration
           </h5>
         </div>
+        <div>
+          <p className="text-sm text-gray-500"> {data?.[4][0]} </p>
+        </div>
+        <div>
+          <p className="text-sm text-gray-500"> {data?.[6][0]} </p>
+        </div>
       </div>
 
-      <div className="col-span-12 rounded-sm border border-stroke bg-slate-100 px-5 pb-5 pt-8 shadow-default sm:px-7.5 xl:col-span-12">
+      <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-8 shadow-default sm:px-7.5 xl:col-span-12">
         <div className="mb-3 justify-between gap-4 sm:flex">
-          <h5 className="text-xl text-black dark:text-white">
+          <h5 className="text-xl text-black">
             Profile Finder
           </h5>
         </div>
       </div>
 
-      <div className="col-span-12 rounded-sm border border-stroke bg-slate-100 px-5 pb-5 pt-8 shadow-default sm:px-7.5 xl:col-span-6">
+      <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-8 shadow-default sm:px-7.5 xl:col-span-6">
         <div className="mb-3 justify-between gap-4 sm:flex">
           <h5 className="text-xl text-black dark:text-white">
             System Trackers
@@ -54,7 +60,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="col-span-12 rounded-sm border border-stroke bg-slate-100 px-5 pb-5 pt-8 shadow-default sm:px-7.5 xl:col-span-6">
+      <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-8 shadow-default sm:px-7.5 xl:col-span-6">
         <div className="mb-3 justify-between gap-4 sm:flex">
           <h5 className="text-xl text-black dark:text-white">
             Total Meal Registrations
@@ -64,6 +70,7 @@ export default function Page() {
     </div>
   </main>
   );
+
   return (
 
     <main>
