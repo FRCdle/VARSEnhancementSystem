@@ -3,6 +3,8 @@ import { getSheetData, getHomePanel } from "@/app/lib/google-sheets.action";
 import { Button } from "@/app/ui/button";
 import { sheets } from "googleapis/build/src/apis/sheets";
 import { useEffect, useState } from "react";
+import ReactApexChart from "react-apexcharts";
+import MealChart from "@/app/ui/charts/mealchart";
 
 export default function Page() {
   const [data, setData] = useState<string[][]>();
@@ -20,6 +22,18 @@ export default function Page() {
       (profileFinderData[rowKey] = row.slice(3, 7))
   );
 
+  const systemTrackersData = data?.slice(20, 28);
+  systemTrackersData?.map(
+    (row: string[], rowKey: number) =>
+      (systemTrackersData[rowKey] = row.slice(0, 2))
+  );
+
+  const totalMealRegistrations = data?.slice(20, 30);
+  totalMealRegistrations?.map(
+    (row: string[], rowKey: number) =>
+      (totalMealRegistrations[rowKey] = row.slice(3, 5))
+  );
+
   // const handleVolCODEInput = (e) => {
   //     sheets.spreadsheets.values.append({
   //     auth: glAuth,
@@ -29,10 +43,10 @@ export default function Page() {
   //     requestBody: {
   //         values: [
   //             [
-  //                 "YOUR_DATA", "YOUR_DATA", "YOUR_DATA", 
+  //                 "YOUR_DATA", "YOUR_DATA", "YOUR_DATA",
   //             ],
   //             [
-  //                 "YOUR_DATA", "YOUR_DATA", "YOUR_DATA", 
+  //                 "YOUR_DATA", "YOUR_DATA", "YOUR_DATA",
   //             ]
   //         ]
   //     }
@@ -53,7 +67,7 @@ export default function Page() {
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
         <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-5">
           <div className="mb-3 justify-between gap-4 sm:flex">
-            <h5 className="text-xl font-semibold text-black dark:text-white">
+            <h5 className="text-xl font-semibold text-black ">
               Hotel Services
             </h5>
           </div>
@@ -61,7 +75,7 @@ export default function Page() {
 
         <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-7">
           <div className="mb-3 justify-between gap-4 sm:flex">
-            <h5 className="text-xl font-semibold text-black dark:text-white">
+            <h5 className="text-xl font-semibold text-black ">
               Event Configuration
             </h5>
           </div>
@@ -71,7 +85,7 @@ export default function Page() {
           <div>
             <p className="text-sm text-gray-500"> {eventConfigData?.[3][0]} </p>
           </div>
-          <div className="text-xs rounded-sme bg-white px-5 pb-2.5 pt-6 shadow-default sm:px-7.5 xl:pb-1">
+          <div className="text-xs rounded-sm bg-white px-5 pb-2.5 pt-6 shadow-default sm:px-7.5 xl:pb-1">
             <div className="flex flex-col">
               {eventConfigData
                 ?.slice(5, 9)
@@ -83,9 +97,7 @@ export default function Page() {
                     {row.map((cell: string, cellKey: number) => (
                       <div
                         key={cellKey}
-                        className={
-                          "border-b border-stroke items-center gap-3 p-2.5 xl:p-2.5"
-                        }
+                        className={`border-b border-stroke items-center gap-3 p-2.5 xl:p-2.5`}
                       >
                         <p className="text-gray-500 sm:block">{cell}</p>
                       </div>
@@ -113,21 +125,61 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-8 shadow-default sm:px-7.5 xl:col-span-5">
+        <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-5">
           <div className="mb-3 justify-between gap-4 sm:flex">
-            <h5 className="text-xl text-black dark:text-white">
+            <h5 className="text-xl font-semibold text-black">
               System Trackers
             </h5>
+          </div>
+          <div className="text-xs rounded-sm bg-white px-5 pb-2.5 pt-2 shadow-default sm:px-7.5 xl:pb-1">
+            <div className="flex flex-col">
+              {systemTrackersData?.map((row: string[], rowKey: number) => (
+                <div className={`grid grid-cols-3 sm:grid-cols-3`} key={rowKey}>
+                  {row.map((cell: string, cellKey: number) => (
+                    <div
+                      key={cellKey}
+                      className={`${rowKey === 0 || rowKey === 4 ? "bg-gray-300 text-black font-bold" : "text-gray-500"}
+                                  ${cellKey === 0 ? "col-span-2" : "col-span-1"}
+                                  ${cell === "No Errors" ? "bg-green-400" : ""} 
+                                  ${cell === "Error Detected" ? "bg-red-500" : ""} 
+                                  border-b border-stroke items-center gap-3 p-2.5 xl:p-2.5`}
+                    >
+                      <p className="sm:block">{cell}</p>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
         <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-8 shadow-default sm:px-7.5 xl:col-span-12">
           <div className="mb-3 justify-between gap-4 sm:flex">
-            <h5 className="text-xl text-black dark:text-white">
-              Total Meal Registrations
-            </h5>
+            <h5 className="text-xl text-black ">Total Meal Registrations</h5>
+          </div>
+          <div className="text-xs rounded-sm bg-white px-5 pb-2.5 pt-2 shadow-default sm:px-7.5 xl:pb-1">
+            <div className="flex flex-col">
+              {totalMealRegistrations?.map((row: string[], rowKey: number) => (
+                <div className={`grid grid-cols-2 sm:grid-cols-2`} key={rowKey}>
+                  {row.map((cell: string, cellKey: number) => (
+                    <div
+                      key={cellKey}
+                      className={`${rowKey === 9? "bg-gray-300 text-black font-bold" : "text-gray-500"}
+                                  
+                                  border-b border-stroke items-center gap-3 p-2.5 xl:p-2.5`}
+                    >
+                      <p className="sm:block">{cell}</p>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <MealChart />
           </div>
         </div>
+
       </div>
     </main>
   );
