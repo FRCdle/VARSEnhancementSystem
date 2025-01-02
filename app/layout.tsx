@@ -1,5 +1,4 @@
 import '@/app/ui/global.css'
-import { lusitana } from '@/app/ui/fonts';
 import { lexend } from '@/app/ui/fonts';
 
 

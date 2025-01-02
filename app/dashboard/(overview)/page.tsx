@@ -3,8 +3,11 @@ import { getSheetData, getHomePanel } from "@/app/lib/google-sheets.action";
 import { Button } from "@/app/ui/button";
 import { sheets } from "googleapis/build/src/apis/sheets";
 import { useEffect, useState } from "react";
-import ReactApexChart from "react-apexcharts";
-import MealChart from "@/app/ui/charts/mealchart";
+import dynamic from 'next/dynamic';
+
+const MealChart = dynamic(() => import("@/app/ui/charts/mealchart"), {
+    ssr: false // This ensures the component is not SSR'd
+});
 
 export default function Page() {
   const [data, setData] = useState<string[][]>();
@@ -28,11 +31,17 @@ export default function Page() {
       (systemTrackersData[rowKey] = row.slice(0, 2))
   );
 
-  const totalMealRegistrations = data?.slice(20, 30);
-  totalMealRegistrations?.map(
+  const totalMealRegistrationsData = data?.slice(20, 30);
+  totalMealRegistrationsData?.map(
     (row: string[], rowKey: number) =>
-      (totalMealRegistrations[rowKey] = row.slice(3, 5))
+      (totalMealRegistrationsData[rowKey] = row.slice(3, 5))
   );
+
+  const mealChartLabels : string[] = new Array(totalMealRegistrationsData?.slice(0, 8)?.length);
+  totalMealRegistrationsData?.slice(0, 8).map((row: string[], rowKey: number) => (mealChartLabels[rowKey] = row[0]));
+
+  const mealChartSeries : number[] = new Array(totalMealRegistrationsData?.slice(0, 8)?.length);
+  totalMealRegistrationsData?.slice(0, 8).map((row: string[], rowKey: number) => (mealChartSeries[rowKey] = parseInt(row[1])));
 
   // const handleVolCODEInput = (e) => {
   //     sheets.spreadsheets.values.append({
@@ -153,18 +162,18 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-8 shadow-default sm:px-7.5 xl:col-span-12">
+        <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-6">
           <div className="mb-3 justify-between gap-4 sm:flex">
             <h5 className="text-xl text-black ">Total Meal Registrations</h5>
           </div>
           <div className="text-xs rounded-sm bg-white px-5 pb-2.5 pt-2 shadow-default sm:px-7.5 xl:pb-1">
             <div className="flex flex-col">
-              {totalMealRegistrations?.map((row: string[], rowKey: number) => (
+              {totalMealRegistrationsData?.map((row: string[], rowKey: number) => (
                 <div className={`grid grid-cols-2 sm:grid-cols-2`} key={rowKey}>
                   {row.map((cell: string, cellKey: number) => (
                     <div
                       key={cellKey}
-                      className={`${rowKey === 9? "bg-gray-300 text-black font-bold" : "text-gray-500"}
+                      className={`${rowKey === 9 ? "bg-gray-300 text-black font-bold" : "text-gray-500"}
                                   
                                   border-b border-stroke items-center gap-3 p-2.5 xl:p-2.5`}
                     >
@@ -175,11 +184,14 @@ export default function Page() {
               ))}
             </div>
           </div>
-          <div>
-            <MealChart />
-          </div>
         </div>
 
+        <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-6">
+          <div className="mb-3 justify-between gap-4 sm:flex">
+            <h5 className="text-xl text-black ">Total Meal Registrations</h5>
+          </div>
+          {data ? <MealChart labels={ mealChartLabels } series={ mealChartSeries } /> : <></>}
+        </div>
       </div>
     </main>
   );
