@@ -16,6 +16,7 @@ const config: Config = {
         'sidenav-color-hover' : '#343A47'
       },
       fontSize: {
+        'tinytiny': '0.6rem',
         'tiny': '0.7rem',
         'sm': '0.8rem',
         'base': '1rem',

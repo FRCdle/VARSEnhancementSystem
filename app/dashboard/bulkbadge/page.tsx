@@ -10,13 +10,15 @@ export default function Page() {
 
     function generatePDF() {
         console.log(data);
-        const doc = new jsPDF();
+        const doc = new jsPDF('portrait', 'pt', 'a4');
 
-        // Add content to PDF
-        doc.text('Hello World!', 10, 10);
-
-        // Save PDF
-        doc.save('generated.pdf');
+        doc.html(document.getElementById("first-badge") as HTMLElement, {
+            callback: function(doc) {
+                doc.save("generated.pdf");
+            },
+            x: 10,
+            y: 10
+        });
     }
 
     return (
@@ -31,15 +33,16 @@ export default function Page() {
                         () => {
                                 getBadges()
                                     .then((data) => {setData(data)});
-                                setTimeout(() => generatePDF(), 500);
+                                setTimeout(() => generatePDF(), 2000);
                             }}
                 >
                 Generate PDFs
                 </button>
             </div>
-            <div>
+            <div id="first-badge">
                 <BadgeFront badgeFrontData={data as string[][]}></BadgeFront>
                 <BadgeBack badgeBackData={data as string[][]}></BadgeBack>
+                <p>hi</p>
             </div>
         </div>
     );
