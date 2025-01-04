@@ -1,17 +1,22 @@
 "use client";
-import { getSheetData, getHomePanel } from "@/app/lib/google-sheets.action";
+import {
+  getSheetData,
+  getHomePanel,
+  writeVolCode,
+} from "@/app/lib/google-sheets.action";
 import { Button } from "@/app/ui/button";
 import { sheets } from "googleapis/build/src/apis/sheets";
 import { useEffect, useState } from "react";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
 const MealChart = dynamic(() => import("@/app/ui/charts/mealchart"), {
-    ssr: false // This ensures the component is not SSR'd
+  ssr: false, // This ensures the component is not SSR'd
 });
 
 export default function Page() {
   const [data, setData] = useState<string[][]>();
   const [refreshToken, setRefreshToken] = useState(Math.random());
+  const [VOLCodeInput, setVOLCodeInput] = useState("");
 
   const eventConfigData = data?.slice(3, 12);
   eventConfigData?.map(
@@ -37,31 +42,23 @@ export default function Page() {
       (totalMealRegistrationsData[rowKey] = row.slice(3, 5))
   );
 
-  const mealChartLabels : string[] = new Array(totalMealRegistrationsData?.slice(0, 8)?.length);
-  totalMealRegistrationsData?.slice(0, 8).map((row: string[], rowKey: number) => (mealChartLabels[rowKey] = row[0]));
+  const mealChartLabels: string[] = new Array(
+    totalMealRegistrationsData?.slice(0, 8)?.length
+  );
+  totalMealRegistrationsData
+    ?.slice(0, 8)
+    .map((row: string[], rowKey: number) => (mealChartLabels[rowKey] = row[0]));
 
-  const mealChartSeries : number[] = new Array(totalMealRegistrationsData?.slice(0, 8)?.length);
-  totalMealRegistrationsData?.slice(0, 8).map((row: string[], rowKey: number) => (mealChartSeries[rowKey] = parseInt(row[1])));
-
-  // const handleVolCODEInput = (e) => {
-  //     sheets.spreadsheets.values.append({
-  //     auth: glAuth,
-  //     spreadsheetId: "YOUR_SPREAD_SHEET_ID",
-  //     range: "RANGE",
-  //     valueInputOption: "USER_ENTERED",
-  //     requestBody: {
-  //         values: [
-  //             [
-  //                 "YOUR_DATA", "YOUR_DATA", "YOUR_DATA",
-  //             ],
-  //             [
-  //                 "YOUR_DATA", "YOUR_DATA", "YOUR_DATA",
-  //             ]
-  //         ]
-  //     }
-  // })
-  // };
-
+  const mealChartSeries: number[] = new Array(
+    totalMealRegistrationsData?.slice(0, 8)?.length
+  );
+  totalMealRegistrationsData
+    ?.slice(0, 8)
+    .map(
+      (row: string[], rowKey: number) =>
+        (mealChartSeries[rowKey] = parseInt(row[1]))
+    );
+    
   useEffect(() => {
     getHomePanel()
       .then((data) => setData(data))
@@ -88,10 +85,8 @@ export default function Page() {
               Event Configuration
             </h5>
           </div>
-          <div>
+          <div className="inline-block">
             <p className="text-sm text-gray-500"> {eventConfigData?.[1][0]} </p>
-          </div>
-          <div>
             <p className="text-sm text-gray-500"> {eventConfigData?.[3][0]} </p>
           </div>
           <div className="text-xs rounded-sm bg-white px-5 pb-2.5 pt-6 shadow-default sm:px-7.5 xl:pb-1">
@@ -122,15 +117,57 @@ export default function Page() {
             <h5 className="text-xl font-semibold text-black">Profile Finder</h5>
           </div>
           <div>
-            <label className="text-sm text-gray-500">
-              VolCODE:
+            <label className="text-m text-gray-500">
+              VolCODE: &nbsp;
               <input
-                // onChange={}
-                className="h-5 mr-3 px-1 text-sm font-normal"
+                onChange={(e) => setVOLCodeInput(e.target.value)}
+                className="h-8 mr-3 px-0.5 text-m font-normal"
                 name="volcode-input"
               />
-              Insert Volcode to left to pull volunteer profile
+              <button
+                onClick={() => writeVolCode([[VOLCodeInput]])}
+                className="h-10 items-center rounded-lg bg-blue-500 px-4 text-m font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+              >
+                Get Data
+              </button>
             </label>
+          </div>
+
+          <div className="mt-3 text-sm text-gray-500">
+            <table className="text-left [&_th]:p-2 [&_td]:p-2">
+              <tbody>
+                <tr>
+                  <th>Role:</th>
+                  <td>{profileFinderData?.[1][0]}</td>
+                </tr>
+                <tr>
+                  <th>Position:</th>
+                  <td>{profileFinderData?.[3][0]}</td>
+                </tr>
+                <tr>
+                  <th>Email:</th>
+                  <td>{profileFinderData?.[5][1]}</td>
+                </tr>
+                <tr>
+                  <th>Phone Number:</th>
+                  <td>{profileFinderData?.[6][1]}</td>
+                </tr>
+                <tr>
+                  <th>Designation:</th>
+                  <td>{profileFinderData?.[7][1]}</td>
+                </tr>
+                <tr>
+                  <th>Confirmation Email:</th>
+                  <td>{profileFinderData?.[10][0]}</td>
+                </tr>
+                <tr>
+                  <th>Position Confirmation:</th>
+                  <td>{profileFinderData?.[13][0]}</td>
+                </tr>
+
+              </tbody>
+              
+            </table>
           </div>
         </div>
 
@@ -164,33 +201,42 @@ export default function Page() {
 
         <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-6">
           <div className="mb-3 justify-between gap-4 sm:flex">
-            <h5 className="text-xl text-black ">Total Meal Registrations</h5>
+            <h5 className="text-xl font-semibold text-black ">Total Meal Registrations</h5>
           </div>
           <div className="text-xs rounded-sm bg-white px-5 pb-2.5 pt-2 shadow-default sm:px-7.5 xl:pb-1">
             <div className="flex flex-col">
-              {totalMealRegistrationsData?.map((row: string[], rowKey: number) => (
-                <div className={`grid grid-cols-2 sm:grid-cols-2`} key={rowKey}>
-                  {row.map((cell: string, cellKey: number) => (
-                    <div
-                      key={cellKey}
-                      className={`${rowKey === 9 ? "bg-gray-300 text-black font-bold" : "text-gray-500"}
+              {totalMealRegistrationsData?.map(
+                (row: string[], rowKey: number) => (
+                  <div
+                    className={`grid grid-cols-2 sm:grid-cols-2`}
+                    key={rowKey}
+                  >
+                    {row.map((cell: string, cellKey: number) => (
+                      <div
+                        key={cellKey}
+                        className={`${rowKey === 9 ? "bg-gray-300 text-black font-bold" : "text-gray-500"}
                                   
                                   border-b border-stroke items-center gap-3 p-2.5 xl:p-2.5`}
-                    >
-                      <p className="sm:block">{cell}</p>
-                    </div>
-                  ))}
-                </div>
-              ))}
+                      >
+                        <p className="sm:block">{cell}</p>
+                      </div>
+                    ))}
+                  </div>
+                )
+              )}
             </div>
           </div>
         </div>
 
         <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-6">
           <div className="mb-3 justify-between gap-4 sm:flex">
-            <h5 className="text-xl text-black ">Total Meal Registrations</h5>
+            <h5 className="text-xl font-semibold text-black ">Total Meal Registrations</h5>
           </div>
-          {data ? <MealChart labels={ mealChartLabels } series={ mealChartSeries } /> : <></>}
+          {data ? (
+            <MealChart labels={mealChartLabels} series={mealChartSeries} />
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </main>
