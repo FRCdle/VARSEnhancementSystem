@@ -2,7 +2,7 @@ import { ApexOptions } from "apexcharts";
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
-export default function MealChart( props : { labels : string[], series : number[] } ) {
+export default function DonutChart( props : { labels : string[], series : number[] } ) {
     const options: ApexOptions = {
     chart: {
         fontFamily: "Lexend, sans-serif",
@@ -18,7 +18,7 @@ export default function MealChart( props : { labels : string[], series : number[
     plotOptions: {
         pie: {
         donut: {
-            size: "65%",
+            size: "60%",
             background: "transparent",
         },
         },
@@ -31,7 +31,7 @@ export default function MealChart( props : { labels : string[], series : number[
         breakpoint: 2600,
         options: {
             chart: {
-            width: 380,
+            width: 350,
             },
         },
         },
@@ -39,7 +39,7 @@ export default function MealChart( props : { labels : string[], series : number[
         breakpoint: 640,
         options: {
             chart: {
-            width: 200,
+            width: 250,
             },
         },
         },

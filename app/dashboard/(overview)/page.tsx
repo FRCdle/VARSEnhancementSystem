@@ -9,7 +9,7 @@ import { sheets } from "googleapis/build/src/apis/sheets";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
-const MealChart = dynamic(() => import("@/app/ui/charts/mealchart"), {
+const DonutChart = dynamic(() => import("@/app/ui/charts/donutchart"), {
   ssr: false, // This ensures the component is not SSR'd
 });
 
@@ -18,7 +18,7 @@ export default function Page() {
   const [refreshToken, setRefreshToken] = useState(Math.random());
   const [VOLCodeInput, setVOLCodeInput] = useState("");
 
-  const eventConfigData = data?.slice(3, 12);
+  const eventConfigData = data?.slice(3, 17);
   eventConfigData?.map(
     (row: string[], rowKey: number) =>
       (eventConfigData[rowKey] = row.slice(0, 2))
@@ -58,7 +58,18 @@ export default function Page() {
       (row: string[], rowKey: number) =>
         (mealChartSeries[rowKey] = parseInt(row[1]))
     );
-    
+
+  const participantStatusLabels: string[] = new Array(3);
+  eventConfigData
+    ?.slice(6, 9)
+    .map((row: string[], rowKey: number) => (participantStatusLabels[rowKey] = row[0]));
+
+  const participantStatusSeries: number[] = new Array(3);
+  eventConfigData
+    ?.slice(6, 9)
+    .map((row: string[], rowKey: number) => (participantStatusSeries[rowKey] = parseInt(row[1])));
+  
+
   useEffect(() => {
     getHomePanel()
       .then((data) => setData(data))
@@ -71,7 +82,7 @@ export default function Page() {
     <main>
       <h1 className={`mb-4 font-semibold text-xl md:text-2xl`}>Home</h1>
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-        <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-5">
+        <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-3">
           <div className="mb-3 justify-between gap-4 sm:flex">
             <h5 className="text-xl font-semibold text-black ">
               Hotel Services
@@ -79,7 +90,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-7">
+        <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-5">
           <div className="mb-3 justify-between gap-4 sm:flex">
             <h5 className="text-xl font-semibold text-black ">
               Event Configuration
@@ -92,16 +103,19 @@ export default function Page() {
           <div className="text-xs rounded-sm bg-white px-5 pb-2.5 pt-6 shadow-default sm:px-7.5 xl:pb-1">
             <div className="flex flex-col">
               {eventConfigData
-                ?.slice(5, 9)
+                ?.slice(5, 14)
                 ?.map((row: string[], rowKey: number) => (
                   <div
-                    className={`grid grid-cols-2 sm:grid-cols-2`}
+                    className={`grid grid-cols-4 sm:grid-cols-4`}
                     key={rowKey}
                   >
                     {row.map((cell: string, cellKey: number) => (
                       <div
                         key={cellKey}
-                        className={`border-b border-stroke items-center gap-3 p-2.5 xl:p-2.5`}
+                        className={`${cellKey === 0 ? "col-span-3" : "col-span-1"}
+                                    ${rowKey === 5 || rowKey === 7 ? "bg-gray-300" : ""}
+                                    ${cell === "ACTIVE" ? "bg-green-400" : ""}
+                                    border-b border-stroke items-center gap-3 p-2.5 xl:p-2.5`}
                       >
                         <p className="text-gray-500 sm:block">{cell}</p>
                       </div>
@@ -110,6 +124,19 @@ export default function Page() {
                 ))}
             </div>
           </div>
+        </div>
+
+        <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-4">
+          <div className="mb-3 justify-between gap-4 sm:flex">
+            <h5 className="text-xl font-semibold text-black ">
+              Participant Status
+            </h5>
+          </div>
+          {data ? (
+            <DonutChart labels={participantStatusLabels} series={participantStatusSeries} />
+          ) : (
+            <></>
+          )}
         </div>
 
         <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-7">
@@ -134,7 +161,7 @@ export default function Page() {
           </div>
 
           <div className="mt-3 text-sm text-gray-500">
-            <table className="text-left [&_th]:p-2 [&_td]:p-2">
+            <table className="text-left [&_th]:p-2 [&_th]:pr-6 [&_td]:p-2">
               <tbody>
                 <tr>
                   <th>Role:</th>
@@ -164,14 +191,45 @@ export default function Page() {
                   <th>Position Confirmation:</th>
                   <td>{profileFinderData?.[13][0]}</td>
                 </tr>
-
               </tbody>
-              
             </table>
           </div>
         </div>
 
         <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-5">
+          <div className="mb-3 justify-between gap-4 sm:flex">
+            <h5 className="text-xl font-semibold text-black ">
+              Profile Finder
+            </h5>
+          </div>
+          <div className="text-xs rounded-sm bg-white px-5 pb-2.5 pt-2 shadow-default sm:px-7.5 xl:pb-1">
+            <div className="flex flex-col">
+              {profileFinderData
+                ?.slice(5, 15)
+                ?.map((row: string[], rowKey: number) => (
+                  <div
+                    className={`grid grid-cols-4 sm:grid-cols-4`}
+                    key={rowKey}
+                  >
+                    {row.slice(2, 4).map((cell: string, cellKey: number) => (
+                      <div
+                        key={cellKey}
+                        className={`${cell === "YES" ? "bg-green-400" : ""}
+                                    ${cell === "NO" ? "bg-red-400" : ""}  
+                                    ${rowKey === 9 ? "font-bold" : ""}
+                                    ${cellKey === 0 ? "col-span-3" : "col-span-1"}
+                                    border-b border-stroke items-center gap-3 p-2.5 xl:p-2.5`}
+                      >
+                        <p className="text-black sm:block">{cell}</p>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-4">
           <div className="mb-3 justify-between gap-4 sm:flex">
             <h5 className="text-xl font-semibold text-black">
               System Trackers
@@ -187,7 +245,7 @@ export default function Page() {
                       className={`${rowKey === 0 || rowKey === 4 ? "bg-gray-300 text-black font-bold" : "text-gray-500"}
                                   ${cellKey === 0 ? "col-span-2" : "col-span-1"}
                                   ${cell === "No Errors" ? "bg-green-400" : ""} 
-                                  ${cell === "Error Detected" ? "bg-red-500" : ""} 
+                                  ${cell === "Error Detected" ? "bg-red-400" : ""} 
                                   border-b border-stroke items-center gap-3 p-2.5 xl:p-2.5`}
                     >
                       <p className="sm:block">{cell}</p>
@@ -199,22 +257,25 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-6">
+        <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-4">
           <div className="mb-3 justify-between gap-4 sm:flex">
-            <h5 className="text-xl font-semibold text-black ">Total Meal Registrations</h5>
+            <h5 className="text-xl font-semibold text-black ">
+              Total Meal Registrations
+            </h5>
           </div>
           <div className="text-xs rounded-sm bg-white px-5 pb-2.5 pt-2 shadow-default sm:px-7.5 xl:pb-1">
             <div className="flex flex-col">
               {totalMealRegistrationsData?.map(
                 (row: string[], rowKey: number) => (
                   <div
-                    className={`grid grid-cols-2 sm:grid-cols-2`}
+                    className={`grid grid-cols-6 sm:grid-cols-6`}
                     key={rowKey}
                   >
                     {row.map((cell: string, cellKey: number) => (
                       <div
                         key={cellKey}
-                        className={`${rowKey === 9 ? "bg-gray-300 text-black font-bold" : "text-gray-500"}
+                        className={`${cellKey === 0 ? "col-span-5" : "col-span-1"}
+                                    ${rowKey === 9 ? "bg-gray-300 text-black font-bold" : "text-gray-500"}
                                   
                                   border-b border-stroke items-center gap-3 p-2.5 xl:p-2.5`}
                       >
@@ -228,12 +289,14 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-6">
+        <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-4">
           <div className="mb-3 justify-between gap-4 sm:flex">
-            <h5 className="text-xl font-semibold text-black ">Total Meal Registrations</h5>
+            <h5 className="text-xl font-semibold text-black ">
+              Total Meal Registrations
+            </h5>
           </div>
           {data ? (
-            <MealChart labels={mealChartLabels} series={mealChartSeries} />
+            <DonutChart labels={mealChartLabels} series={mealChartSeries} />
           ) : (
             <></>
           )}
