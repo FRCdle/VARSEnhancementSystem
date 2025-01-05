@@ -65,7 +65,3 @@ export async function writeVolCode(VOLCode : string[][]) {
 export async function getHomePanel() : Promise<string[][]> {
     return getSheetData('Home!A1:K34');
 }
-
-export async function getBadges() : Promise<string[][]> {
-    return getSheetData('Bulkbadge!A1:F3420')
-}
