@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import jsPDF from 'jspdf';
+import fs from 'fs';
+
 export default function Page() {
 
     const [text, setText] = useState<string>("");
 
     const handleClick = async () => {
         try {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbx1Id5Z2FuJsU7fMHJUxIPdz5cIK1SOjM-YUGCo1DlZN_y7Od5if36e3Nby8uuUyjOE1Q/exec');
+            const response = await fetch('https://script.google.com/macros/s/AKfycbwGotDTlgth8LHRu1yxRt6F7_Tlyq3k5mBR9C-bYdUj01Muiw4TbUKtBQePktVMdUxTrw/exec');
             console.log(response); 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -18,15 +20,31 @@ export default function Page() {
             console.log(data);
         } catch (error) {
             console.error('Fetch error:', error);
-            // Handle the error, e.g., display an error message to the user
             setText('Error fetching data.'); 
         }
     }
 
     const downloadPDF = async () => {
-        const pdf = new jsPDF();
-        pdf.text(text, 10, 10);
-        pdf.save('Estadodecuenta.pdf');
+        // base64 string
+        var base64str = text;
+
+        // decode base64 string, remove space for IE compatibility
+        var binary = atob(base64str.replace(/\s/g, ''));
+        var len = binary.length;
+        var buffer = new ArrayBuffer(len);
+        var view = new Uint8Array(buffer);
+        for (var i = 0; i < len; i++) {
+            view[i] = binary.charCodeAt(i);
+        }
+
+        // create the blob object with content-type "application/pdf"               
+        var blob = new Blob( [view], { type: "application/pdf" });
+
+        var link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        var fileName = "output";
+        link.download = fileName;
+        link.click();
     }
 
     useEffect(
@@ -47,7 +65,6 @@ export default function Page() {
                     onClick={
                         () => {
                             handleClick();
-                            console.log("hi2");
                         }}
                 >
                 Generate PDFs
