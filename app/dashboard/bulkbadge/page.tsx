@@ -8,12 +8,12 @@ export default function Page() {
 
     const handleClick = async () => {
         try {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbxpy07geaxztmwvBQwNsyfmk-oeV58QGdbKzCCzIZjQByHf5uDh5S1ELV3O3ZgN9zKkVg/exec');
+            const response = await fetch('https://script.google.com/macros/s/AKfycbx1Id5Z2FuJsU7fMHJUxIPdz5cIK1SOjM-YUGCo1DlZN_y7Od5if36e3Nby8uuUyjOE1Q/exec');
             console.log(response); 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            const data = await response.text(); 
+            const data = await response.text();
             setText(data);
             console.log(data);
         } catch (error) {
