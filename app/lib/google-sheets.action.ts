@@ -65,3 +65,11 @@ export async function writeVolCode(VOLCode : string[][]) {
 export async function getHomePanel() : Promise<string[][]> {
     return getSheetData('Home!A1:K34');
 }
+
+export async function getMealCheckin() : Promise<string[][]> {
+    return getSheetData('Meal checkin!A1:L400')
+}
+
+export async function getMealIntake() : Promise<string[][]> {
+    return getSheetData('Meal intake!A1:O')
+}

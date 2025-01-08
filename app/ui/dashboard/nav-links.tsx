@@ -17,8 +17,13 @@ const links = [
     icon: HomeIcon 
   },
   { 
-    name: 'Volunteer Panel', 
-    href: '/dashboard/volunteer-panel', 
+    name: 'Meal Check-In', 
+    href: '/dashboard/meal-checkin', 
+    icon: UserGroupIcon 
+  },
+  { 
+    name: 'Meal Intake', 
+    href: '/dashboard/meal-intake', 
     icon: UserGroupIcon 
   },
   {
