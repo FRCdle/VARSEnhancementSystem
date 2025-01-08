@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import jsPDF from 'jspdf';
-import fs from 'fs';
+import { badgePDFtoLink, base64ToPDFLink } from '@/app/lib/pdf-utils';
 
 export default function Page() {
 
@@ -16,6 +15,8 @@ export default function Page() {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.text();
+
+            // triggers the useEffect to download the PDF if data isn't empty
             setText(data);
             console.log(data);
         } catch (error) {
@@ -25,26 +26,8 @@ export default function Page() {
     }
 
     const downloadPDF = async () => {
-        // base64 string
-        var base64str = text;
-
-        // decode base64 string, remove space for IE compatibility
-        var binary = atob(base64str.replace(/\s/g, ''));
-        var len = binary.length;
-        var buffer = new ArrayBuffer(len);
-        var view = new Uint8Array(buffer);
-        for (var i = 0; i < len; i++) {
-            view[i] = binary.charCodeAt(i);
-        }
-
-        // create the blob object with content-type "application/pdf"               
-        var blob = new Blob( [view], { type: "application/pdf" });
-
-        var link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        var fileName = "output";
-        link.download = fileName;
-        link.click();
+        badgePDFtoLink(text)
+            .then((link) => link.click());
     }
 
     useEffect(
