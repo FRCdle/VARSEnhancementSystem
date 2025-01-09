@@ -12,7 +12,7 @@ export default function Page() {
     getMealCheckin()
       .then((data) => setData(data))
       .finally(() => {
-        setTimeout(() => setRefreshToken(Math.random()), 3000); // refresh rate in milliseconds
+        setTimeout(() => setRefreshToken(Math.random()), 5000); // refresh rate in milliseconds
       });
   }, [refreshToken]);
 
@@ -21,7 +21,7 @@ export default function Page() {
     <h1 className="mb-2 text-xl md:text-2xl text-black">
       Meal Check-In Panel
     </h1>
-    <div className="text-xs rounded-sme bg-white px-5 pb-2.5 pt-6 shadow-default sm:px-7.5 xl:pb-1">
+    <div className="text-xs rounded-sm bg-white px-5 pb-2.5 pt-6 shadow-default sm:px-7.5 xl:pb-1">
       <div className="flex flex-col">
         {data?.map((row : string[], rowKey : number) => (
           <div
@@ -29,7 +29,7 @@ export default function Page() {
             key={rowKey}
           >
             {row.map((cell : string, cellKey : number) => (
-              <div key={cellKey} className={`${cellKey === 1 ? 'font-black' : 'font-semibold'} ${cell === "NO ASSIGNMENTS" ? 'bg-red-200' : ''} ${cellKey > 3 ? 'border border-stroke' : 'border-b border-stroke'} items-center gap-3 p-2.5 xl:p-2.5 `}>
+              <div key={cellKey} className={`${cellKey === 1 ? 'font-black' : 'font-semibold'} ${cell === "NO ASSIGNMENTS" ? 'bg-red-200' : ''} ${cellKey > 3 ? 'border border-stroke' : 'border-b border-stroke'} items-center gap-3 p-2.5 xl:p-2.5`}>
                 <p className="text-center hidden text-black sm:block">{cell}</p>
               </div>
             ))}

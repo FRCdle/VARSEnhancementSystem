@@ -12,25 +12,25 @@ export default function Page() {
     getMealIntake()
       .then((data) => setData(data))
       .finally(() => {
-        setTimeout(() => setRefreshToken(Math.random()), 3000); // refresh rate in milliseconds
+        setTimeout(() => setRefreshToken(Math.random()), 5000); // refresh rate in milliseconds
       });
   }, [refreshToken]);
 
   return(
-  <div>
+  <div className="">
     <h1 className="mb-2 text-xl md:text-2xl text-black">
       Meal Intake Panel
     </h1>
-    <div className="text-xs rounded-sme bg-white px-5 pb-2.5 pt-6 shadow-default sm:px-7.5 xl:pb-1">
-      <div className="flex flex-col">
+    <div className="text-xs rounded-sm bg-white px-5 pb-2.5 pt-6 shadow-default sm:px-7.5 xl:pb-1">
+      <div className="overflow-scroll flex flex-col">
         {data?.map((row : string[], rowKey : number) => (
           <div
-            className={`${row[0] === "" ? 'bg-slate-200' : '' } grid grid-cols-12 sm:grid-cols-12`}
+            className={`${row[0] === "" ? 'bg-slate-200' : '' } grid grid-cols-15 sm:grid-cols-15`}
             key={rowKey}
           >
             {row.map((cell : string, cellKey : number) => (
-              <div key={cellKey} className={`${cellKey === 1 ? 'font-black' : 'font-semibold'} ${cell === "NO ASSIGNMENTS" ? 'bg-red-200' : ''} ${cellKey > 3 ? 'border border-stroke' : 'border-b border-stroke'} items-center gap-1 p-1.5 xl:p-1.5 `}>
-                <p className="text-center hidden text-black sm:block">{cell}</p>
+              <div key={cellKey} className={`font-semibold border border-stroke items-center flex w-96`}>
+                <p className="text-center text-black overflow-auto ">{cell}</p>
               </div>
             ))}
           </div>

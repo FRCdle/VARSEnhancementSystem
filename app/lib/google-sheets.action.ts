@@ -71,5 +71,5 @@ export async function getMealCheckin() : Promise<string[][]> {
 }
 
 export async function getMealIntake() : Promise<string[][]> {
-    return getSheetData('Meal intake!A1:O')
+    return getSheetData('Meal intake!A1:O400')
 }
