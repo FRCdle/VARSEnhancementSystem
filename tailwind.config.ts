@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       gridTemplateColumns: {
-        '15': 'repeat(15, minmax(0, 1fr))',
+        '15': 'repeat(15, 200px)',
       },
       colors: {
         'sidenav-color' : '#1E2433',
