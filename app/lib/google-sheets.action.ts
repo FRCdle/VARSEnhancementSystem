@@ -67,9 +67,9 @@ export async function getHomePanel() : Promise<string[][]> {
 }
 
 export async function getMealCheckin() : Promise<string[][]> {
-    return getSheetData('Meal checkin!A1:L400')
+    return getSheetData('Meal checkin!A1:L')
 }
 
 export async function getMealIntake() : Promise<string[][]> {
-    return getSheetData('Meal intake!A1:O400')
+    return getSheetData('Meal intake!A1:O')
 }

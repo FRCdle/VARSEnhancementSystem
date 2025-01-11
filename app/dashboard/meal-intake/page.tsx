@@ -6,26 +6,26 @@ import { useEffect, useState } from "react";
 export default function Page() {
 
   const [data, setData] = useState<string[][]>();
-  const [refreshToken, setRefreshToken] = useState(Math.random());
+  const [refreshToken, setRefreshToken] = useState(0);
   
   useEffect(() => {
     getMealIntake()
-      .then((data) => setData(data))
-      .finally(() => {
+    .then((data) => setData(data))
+    .finally(() => {
         setTimeout(() => setRefreshToken(Math.random()), 5000); // refresh rate in milliseconds
-      });
+    });
   }, [refreshToken]);
 
-  return(
+  return( data ? 
   <div className="">
     <h1 className="mb-2 text-xl md:text-2xl text-black">
       Meal Intake Panel
     </h1>
-    <div className="text-xs rounded-sm bg-white px-5 pb-2.5 pt-6 shadow-default">
+    <div className={`text-xs rounded-sm bg-white px-5 pb-2.5 pt-6 shadow-default`}>
       <div className="overflow-scroll flex flex-col">
         {data?.map((row : string[], rowKey : number) => (
           <div
-            className={`${rowKey === 0 ? "bg-purple-900 text-white" : " text-black"} ${rowKey !== 0 && rowKey % 2 === 0 ? "bg-gray-200" : ""} grid grid-cols-15`}
+            className={`${rowKey === 0 ? "bg-purple-900 text-white" : "text-black"} ${rowKey !== 0 && rowKey % 2 === 0 ? "bg-gray-200" : ""} grid grid-cols-15`}
             key={rowKey}
           >
             {row.map((cell : string, cellKey : number) => (
@@ -37,7 +37,7 @@ export default function Page() {
         ))}
       </div>
     </div>
-  </div> 
+  </div> : <></>
   
 );
 }

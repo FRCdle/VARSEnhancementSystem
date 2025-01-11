@@ -146,9 +146,11 @@ export default function Page() {
             <label className="text-m text-gray-500">
               VolCODE: &nbsp;
               <input
+                defaultValue={profileFinderData?.[0][1]}
                 onChange={(e) => setVOLCodeInput(e.target.value)}
                 className="h-8 mr-3 px-0.5 text-m font-normal"
                 name="volcode-input"
+                type="text"
               />
               <button
                 onClick={() => {
