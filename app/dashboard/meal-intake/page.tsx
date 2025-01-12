@@ -25,11 +25,11 @@ export default function Page() {
       <div className="overflow-scroll flex flex-col">
         {data?.map((row : string[], rowKey : number) => (
           <div
-            className={`${rowKey === 0 ? "bg-purple-900 text-white" : "text-black"} ${rowKey !== 0 && rowKey % 2 === 0 ? "bg-gray-200" : ""} grid grid-cols-15`}
+            className={`grid grid-cols-15`}
             key={rowKey}
           >
             {row.map((cell : string, cellKey : number) => (
-              <div key={cellKey} className={`font-semibold  items-center p-1`}>
+              <div key={cellKey} className={`${rowKey === 0 ? "bg-purple-900 text-white" : "text-black"} ${rowKey !== 0 && rowKey % 2 === 0 ? "bg-gray-200" : ""} font-semibold  items-center p-1`}>
                 <p className="text-center">{cell}</p>
               </div>
             ))}

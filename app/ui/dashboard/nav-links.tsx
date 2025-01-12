@@ -4,6 +4,8 @@ import {
   UserGroupIcon,
   HomeIcon,
   DocumentDuplicateIcon,
+  CheckBadgeIcon,
+  CakeIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -19,12 +21,12 @@ const links = [
   { 
     name: 'Meal Check-In', 
     href: '/dashboard/meal-checkin', 
-    icon: UserGroupIcon 
+    icon: CheckBadgeIcon 
   },
   { 
     name: 'Meal Intake', 
     href: '/dashboard/meal-intake', 
-    icon: UserGroupIcon 
+    icon: CakeIcon 
   },
   {
     name: 'BulkBadge',

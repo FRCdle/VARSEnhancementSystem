@@ -71,32 +71,51 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-4">
-          <div className="mb-3 justify-between gap-4 sm:flex">
-            <h5 className="text-xl font-semibold text-black ">Status</h5>
+        <div className="col-span-12 xl:col-span-4">
+          <div className="xl:h-1/2 mb-6 col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl xl:col-span-4">
+            <div className="mb-3 justify-between gap-4 sm:flex">
+              <h5 className="text-xl font-semibold text-black ">Status</h5>
+            </div>
+
+            <div className="rounded-sm bg-white pb-2.5 shadow-default xl:pb-1">
+              <div className="mt-3 text-base text-gray-500">
+                <table className="text-left [&_th]:p-2 [&_th]:pr-2  [&_td]:p-2">
+                  <tbody>
+                    <tr>
+                      <th>{data?.[1][0]}:</th>
+                      <td>{data?.[2][0]}</td>
+                    </tr>
+                    <tr>
+                      <th>{data?.[1][1]}:</th>
+                      <td>{data?.[2][1]}</td>
+                    </tr>
+                    <tr>
+                      <th>{data?.[3][0]} </th>
+                      <td>{data?.[3][1]}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
           </div>
 
-          <div className="rounded-sm bg-white px-5 pb-2.5 shadow-default sm:px-7.5 xl:pb-1">
-            <div className="inline-block">
-              <p>
-                {data?.[1][0]} : {data?.[2][0]}
-              </p>
-              <p>
-                {data?.[1][1]} : {data?.[2][1]}
-              </p>
-              <p>
-                {data?.[3][0]} {data?.[3][1]}
-              </p>
+          <div className="xl:h-[calc(50%-24px)] col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-4 ">
+            <div className="mb-3 justify-between gap-4 sm:flex">
+              <h5 className="text-xl font-semibold text-black ">Status</h5>
             </div>
-            
-            <div className="inline-block">
-              <p className="text-l text-gray-500"> {data?.[3][3]} </p>
-              <p className="text-l text-gray-500"> {data?.[9][3]} </p>
-              <p className="text-l text-gray-500"> {data?.[11][3]} </p>
-              <p className="text-l text-gray-500"> {data?.[14][2]} </p>
+
+            <div className="rounded-sm bg-white px-2 pb-2.5 shadow-default xl:pb-1">
+              <div className="inline-block">
+                <p className="text-l text-gray-500"> {data?.[3][3]} </p>
+                <p className="text-l text-gray-500"> {data?.[9][3]} </p>
+                <p className="text-l text-gray-500"> {data?.[11][3]} </p>
+                <p className="text-l text-gray-500"> {data?.[14][2]} </p>
+              </div>
             </div>
           </div>
         </div>
+
 
         <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-4">
           <div className="mb-3 justify-between gap-4 sm:flex">
@@ -133,7 +152,7 @@ export default function Page() {
           </div>
 
           <div className="text-xs rounded-sm bg-white px-5 pb-2.5 shadow-default sm:px-7.5 xl:pb-1">
-            <div className="flex flex-col">
+            <div className="flex flex-col overflow-scroll">
               {stillExpectedMealData?.map((row: string[], rowKey: number) => (
                 <div
                   className={`grid grid-cols-15 sm:grid-cols-15`}
