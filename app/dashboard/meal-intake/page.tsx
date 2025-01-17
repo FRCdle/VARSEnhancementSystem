@@ -1,5 +1,6 @@
 "use client";
 import { getSheetData, getHomePanel, getMealCheckin, getMealIntake } from "@/app/lib/google-sheets.action";
+import { IdleTimer } from "@/app/lib/idle-timer";
 import { Button } from "@/app/ui/button";
 import { useEffect, useState } from "react";
 
@@ -7,16 +8,37 @@ export default function Page() {
 
   const [data, setData] = useState<string[][]>();
   const [refreshToken, setRefreshToken] = useState(0);
-  
+  const [isActive, setIsActive] = useState(true);
+
   useEffect(() => {
-    getMealIntake()
-    .then((data) => setData(data))
-    .finally(() => {
-        setTimeout(() => setRefreshToken(Math.random()), 5000); // refresh rate in milliseconds
-    });
+    if (isActive) {
+      getMealIntake()
+        .then((data) => setData(data))
+        .finally(() => {
+          setTimeout(() => setRefreshToken(Math.random()), 3000); 
+        });
+    } else {
+      setTimeout(() => setRefreshToken(Math.random()), 3000);
+    }
   }, [refreshToken]);
 
+  const handleOnIdle = (event: any) => {
+    console.log('User is idle', event);
+    alert("Page has timed out. Close dialogue to continue viewing page.");
+    setIsActive(false);
+  };
+  
+  const handleOnActive = (event: any) => {
+    console.log('User is active', event);
+    setIsActive(true);
+   };
+
   return( data ? 
+<IdleTimer
+    timeout={1000 * 60 * 15} // 15 minutes timeout
+    onIdle={handleOnIdle}
+    onActive={handleOnActive}
+  >
   <div className="">
     <h1 className="mb-2 text-xl md:text-2xl text-black">
       Meal Intake Panel
@@ -37,7 +59,7 @@ export default function Page() {
         ))}
       </div>
     </div>
-  </div> : <></>
+  </div> </IdleTimer>: <></>
   
 );
 }
