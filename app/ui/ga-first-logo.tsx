@@ -23,15 +23,3 @@ export function GAFirstLogoDark() {
     />
   );
 }
-
-export function BadgeLogo() {
-  return (
-    <Image
-      src="/blackandwhitetall.png"
-      width={250}
-      height={285}
-      className="hidden md:block"
-      alt="FIRST Dive Logo"
-    />
-  )
-}

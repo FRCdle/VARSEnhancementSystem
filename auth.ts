@@ -23,11 +23,11 @@ export const { auth, signIn, signOut } = NextAuth({
     Credentials({
       async authorize(credentials) {
         const parsedCredentials = z
-          .object({ email: z.string(), password: z.string().min(6) })
+          .object({ password: z.string().min(6) })
           .safeParse(credentials);
  
         if (parsedCredentials.success) {
-          const { email, password } = parsedCredentials.data;
+          const { password } = parsedCredentials.data;
           const correctPin = await getSystemPin();
           if (!correctPin) return null;
           // const passwordsMatch = await bcrypt.compare(password, correctPin);
