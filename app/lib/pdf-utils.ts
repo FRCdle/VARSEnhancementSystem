@@ -33,8 +33,6 @@ export async function processBadgesPDF(base64PDF: string) : Promise<Blob> {
 
     const resize = pages.map((page, i) => {
         const { width, height } = page.getSize();
-        console.log(width);
-        console.log(height);
         page.setSize(width * (3.7/8.5), height * (2.6/11));
         page.translateContent(-40, -230);
     });
