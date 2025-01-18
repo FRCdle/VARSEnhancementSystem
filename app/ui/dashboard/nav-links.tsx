@@ -10,6 +10,7 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
+import { FaBed } from "react-icons/fa";
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
@@ -32,6 +33,11 @@ const links = [
     name: 'BulkBadge',
     href: '/dashboard/bulkbadge',
     icon: DocumentDuplicateIcon,
+  },
+  {
+    name: 'Hotel Accommodations',
+    href: '/dashboard/hotel-accommodations',
+    icon: FaBed,
   }
 ];
 

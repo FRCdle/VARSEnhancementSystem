@@ -119,8 +119,8 @@ export default function Page() {
                   </tbody>
                 </table>
               </div>
-
             </div>
+            
           </div>
 
           <div className="xl:h-[calc(50%-24px)] col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-4 ">
