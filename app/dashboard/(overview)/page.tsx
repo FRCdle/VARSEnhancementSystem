@@ -32,13 +32,11 @@ export default function Page() {
   }, [refreshToken]);
 
   const handleOnIdle = (event: any) => {
-    console.log('User is idle', event);
     alert("Page has timed out. Close dialogue to continue viewing page.");
     setIsActive(false);
   };
   
   const handleOnActive = (event: any) => {
-    console.log('User is active', event);
     setIsActive(true);
    };
 
