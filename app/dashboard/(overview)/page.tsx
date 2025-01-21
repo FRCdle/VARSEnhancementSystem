@@ -31,12 +31,12 @@ export default function Page() {
     }
   }, [refreshToken]);
 
-  const handleOnIdle = (event: any) => {
+  const handleOnIdle = (event: object) => {
     alert("Page has timed out. Close dialogue to continue viewing page.");
     setIsActive(false);
   };
   
-  const handleOnActive = (event: any) => {
+  const handleOnActive = (event: object) => {
     setIsActive(true);
    };
 

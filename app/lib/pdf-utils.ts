@@ -2,22 +2,22 @@ import { PDFDocument } from 'pdf-lib';
 
 export async function base64ToPDFBlob(base64PDF: string) : Promise<Blob> {
     // decode base64 string, remove space for IE compatibility
-    var binary = atob(base64PDF.replace(/\s/g, ''));
-    var len = binary.length;
-    var buffer = new ArrayBuffer(len);
-    var view = new Uint8Array(buffer);
-    for (var i = 0; i < len; i++) {
+    const binary = atob(base64PDF.replace(/\s/g, ''));
+    const len = binary.length;
+    const buffer = new ArrayBuffer(len);
+    const view = new Uint8Array(buffer);
+    for (let i = 0; i < len; i++) {
         view[i] = binary.charCodeAt(i);
     }
 
-    var blob = new Blob( [view], { type: "application/pdf" });
+    const blob = new Blob( [view], { type: "application/pdf" });
     return blob;
 }
 
 export async function PDFBlobToLink(pdfBlob: Blob) : Promise<HTMLAnchorElement> {
-    var link = document.createElement('a');
+    const link = document.createElement('a');
     link.href = URL.createObjectURL(pdfBlob);
-    var fileName = "output";
+    const fileName = "output";
     link.download = fileName;
     return link;
 }

@@ -28,14 +28,12 @@ export default function Page() {
 
   const roomData = data?.slice(7, data.length);
 
-  const handleOnIdle = (event: any) => {
-    console.log('User is idle', event);
+  const handleOnIdle = (event: object) => {
     alert("Page has timed out. Close dialogue to continue viewing page.");
     setIsActive(false);
   };
   
-  const handleOnActive = (event: any) => {
-    console.log('User is active', event);
+  const handleOnActive = (event: object) => {
     setIsActive(true);
    };
 

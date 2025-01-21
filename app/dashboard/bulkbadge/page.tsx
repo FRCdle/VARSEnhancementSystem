@@ -7,7 +7,7 @@ import { getAdminPin } from '@/app/lib/google-sheets.action';
 export default function Page() {
 
     const [text, setText] = useState<string>("");
-    const [waitMessage, setWaitMessage] = useState<String>("");
+    const [waitMessage, setWaitMessage] = useState<string>("");
 
     const handleClick = async () => {
         setWaitMessage("Generating PDFs...this can take up to 20 seconds");
@@ -53,7 +53,7 @@ export default function Page() {
                             Create PDFs
                         </h5>
                     </div>
-                    <div className='mb-3 inline-flex align-middle text-md align-middle'>
+                    <div className='mb-3 inline-flex align-middle text-md'>
                         <button
                             className="rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-400"
                             onClick={
