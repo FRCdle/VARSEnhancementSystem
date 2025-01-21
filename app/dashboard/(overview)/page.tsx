@@ -1,20 +1,19 @@
 "use client";
 import { getHomePanel, writeVolCode } from "@/app/lib/google-sheets.action";
-import { Button } from "@/app/ui/button";
-import { sheets } from "googleapis/build/src/apis/sheets";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { IdleTimer } from "@/app/lib/idle-timer";
 import Link from "next/link";
 import clsx from "clsx";
 import { FaBed } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 const DonutChart = dynamic(() => import("@/app/ui/charts/donutchart"), {
   ssr: false, // This ensures the component is not SSR'd
 });
 
 export default function Page() {
-  const [data, setData] = useState<string[][]>();
+  const [data, setData] = useState<string[][]>(new Array(1000).fill(new Array(1000).fill("loading...")));
   const [refreshToken, setRefreshToken] = useState(Math.random());
   const [VOLCodeInput, setVOLCodeInput] = useState("");
   const [isActive, setIsActive] = useState(true);
