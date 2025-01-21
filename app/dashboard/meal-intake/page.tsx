@@ -31,7 +31,7 @@ export default function Page() {
     setIsActive(true);
    };
 
-  return( data ? 
+  return(
 <IdleTimer
     timeout={1000 * 60 * 15} // 15 minutes timeout
     onIdle={handleOnIdle}
@@ -57,7 +57,7 @@ export default function Page() {
         ))}
       </div>
     </div>
-  </div> </IdleTimer>: <></>
+  </div> </IdleTimer>
   
 );
 }
