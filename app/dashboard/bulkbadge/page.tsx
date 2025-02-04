@@ -12,7 +12,7 @@ export default function Page() {
     const handleClick = async () => {
         setWaitMessage("Generating PDFs...this can take up to 20 seconds");
         try {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbwGotDTlgth8LHRu1yxRt6F7_Tlyq3k5mBR9C-bYdUj01Muiw4TbUKtBQePktVMdUxTrw/exec');
+            const response = await fetch('https://script.google.com/macros/s/AKfycbwspCU1f5sHgYsow7KT5PGP3esJ2YN2WMcX7fb-E7HG3qZ9bK2E_IU5GDBfXz_UeQRWZg/exec');
             console.log(response); 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -21,7 +21,6 @@ export default function Page() {
 
             // triggers the useEffect to download the PDF if data isn't empty
             setText(data);
-            setWaitMessage("Done!");
         } catch (error) {
             console.error('Fetch error:', error);
             setText('Error fetching data.'); 
@@ -35,8 +34,11 @@ export default function Page() {
 
     useEffect(
         () => {
-            if (text != "") {
+            if (text == "" || text == "setup required") {
+                // handle error
+            } else {
                 downloadPDF();
+                setWaitMessage("Done!");
             }
         }, [text]);
 
