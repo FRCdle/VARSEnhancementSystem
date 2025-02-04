@@ -98,17 +98,16 @@ export default function Page() {
           <div className="mb-3 justify-between gap-4 sm:flex">
             <h5 className="text-xl font-semibold text-black ">Bed Information</h5>
           </div>
-
           <div className="text-xs rounded-sm bg-white px-5 pb-2.5 shadow-default sm:px-7.5 xl:pb-1">
-            <div className="flex flex-col">
+            <div className="overflow-scroll flex flex-col">
               {bedData?.map((row: string[], rowKey: number) => (
-                <div className={`grid grid-cols-7 sm:grid-cols-7`} key={rowKey}>
+                <div className={`grid grid-cols-15 md:grid-cols-7`} key={rowKey}>
                   {row.map((cell: string, cellKey: number) => (
                     <div
                       key={cellKey}
                       className={`
                                   ${rowKey === 0 ? "font-semibold text-white bg-gray-700" : "text-gray-500"}
-                                  border-b border-stroke items-center gap-3 p-2.5 xl:p-2.5`}
+                                  border-b border-stroke items-center gap-3 p-1 xl:p-2.5`}
                     >
                       <p className="text-center sm:block">{cell}</p>
                     </div>
