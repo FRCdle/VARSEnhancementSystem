@@ -1,5 +1,5 @@
 "use client";
-import { getHomePanel, writeVolCode } from "@/app/lib/google-sheets.action";
+import { getHomePanel, getHotelLocations, writeVolCode } from "@/app/lib/google-sheets.action";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { IdleTimer } from "@/app/lib/idle-timer";
@@ -18,10 +18,25 @@ export default function Page() {
   const [VOLCodeInput, setVOLCodeInput] = useState("");
   const [isActive, setIsActive] = useState(true);
 
+  const [hotelData, setHotelData] = useState<string[][]>();
+  const [writtenHotelData, setWrittenHotelData] = useState<string[][]>();
+
   useEffect(() => {
     if (isActive) {
       getHomePanel()
         .then((data) => setData(data))
+        .finally(() => {
+          setTimeout(() => setRefreshToken(Math.random()), 3000);
+        });
+    } else {
+      setTimeout(() => setRefreshToken(Math.random()), 3000);
+    }
+  }, [refreshToken]);
+
+  useEffect(() => {
+    if (isActive) {
+      getHotelLocations()
+        .then((hotelData) => setHotelData(hotelData))
         .finally(() => {
           setTimeout(() => setRefreshToken(Math.random()), 3000);
         });
@@ -38,6 +53,12 @@ export default function Page() {
   const handleOnActive = (event: object) => {
     setIsActive(true);
   };
+
+  const handleWrittenHotelData = (row : number, column : number, newData : string) => {
+    let copy = hotelData?.slice()!;
+    copy[row][column] = newData;
+    setWrittenHotelData(copy);
+  }
 
   const eventConfigData = data?.slice(3, 17);
   eventConfigData?.map(
@@ -105,7 +126,7 @@ export default function Page() {
       <main>
         <h1 className={`mb-4 font-semibold text-xl md:text-2xl`}>Home</h1>
         <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-          <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-3">
+          <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-7">
             <div className="mb-3 justify-between gap-4 sm:flex">
               <h5 className="text-xl font-semibold text-black ">
                 Hotel Services
@@ -125,6 +146,29 @@ export default function Page() {
                 <FaBed className="w-6" />
                 <p className="md:block">Hotel Accomodations</p>
               </Link>
+            </div>
+
+            <div className="text-xs rounded-sm bg-white px-5 pb-2.5 pt-2 shadow-default sm:px-7.5 xl:pb-1">
+              <div className="flex flex-col">
+                {hotelData
+                  ?.map((row: string[], rowKey: number) => (
+                    <div
+                      className={`grid grid-cols-2`}
+                      key={rowKey}
+                    >
+                      {row.map((cell: string, cellKey: number) => (
+                        <div
+                          key={cellKey}
+                          className={`
+                                    ${cellKey === 1 && cell.includes("INSERT") ? "bg-red-400" : ""}
+                                    border-b border-stroke items-center gap-3 p-2.5 xl:p-2.5`}
+                        >
+                          <p className="text-black sm:block">{cell}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
 
@@ -161,6 +205,7 @@ export default function Page() {
                                     ${cell === "ACTIVE" ? "bg-green-400" : ""}
                                     border-b border-stroke items-center gap-3 p-2.5 xl:p-2.5`}
                         >
+
                           <p className="text-gray-500 sm:block">{cell}</p>
                         </div>
                       ))}
@@ -168,10 +213,7 @@ export default function Page() {
                   ))}
               </div>
             </div>
-          </div>
-
-          <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-4">
-            <div className="mb-3 justify-between gap-4 sm:flex">
+            <div className="mb-3 mt-5 justify-between gap-4 sm:flex">
               <h5 className="text-xl font-semibold text-black ">
                 Participant Status
               </h5>
@@ -185,8 +227,12 @@ export default function Page() {
               <></>
             )}
           </div>
+{/* 
+          <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-4">
+            
+          </div> */}
 
-          <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-7">
+          <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-5">
             <div className="mb-3 justify-between gap-4 sm:flex">
               <h5 className="text-xl font-semibold text-black">
                 Profile Finder
@@ -251,7 +297,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-5">
+          <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-7">
             <div className="mb-3 justify-between gap-4 sm:flex">
               <h5 className="text-xl font-semibold text-black ">
                 Profile Finder

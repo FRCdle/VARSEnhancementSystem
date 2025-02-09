@@ -1,5 +1,6 @@
 'use server';
 import { google } from "googleapis";
+import { useEvent } from "../ui/dashboard/event-dropdown/event-state";
 
 export async function getSheetData(spreadsheetRange: string) : Promise<string[][]> {
   const glAuth = await google.auth.getClient({
@@ -16,11 +17,11 @@ export async function getSheetData(spreadsheetRange: string) : Promise<string[][
     });
 
     const glSheets = google.sheets({ version: "v4", auth: glAuth });
-
     const data = await glSheets.spreadsheets.values.get({
-        spreadsheetId: process.env.spreadsheet_id,
+        spreadsheetId: process.env["spreadsheet_id"],
         range: spreadsheetRange,
     });
+    //console.log(process.env["spreadsheet_id"]);
 
     return { data: <string[][]> data.data.values }.data;
 }
@@ -86,6 +87,14 @@ export async function writeVolCode(VOLCode : string[][]) {
     writeCellData('Home!E3', VOLCode);
 }
 
+export async function writeVolunteerCell(cellData : string[][], row : number, column : number) {
+    writeCellData('Dalton25!' + String.fromCharCode(column + 65) + (row + 1), cellData);
+}
+
+export async function writeVolunteerData(cellData : string[][]) {
+    writeCellData('Dalton25!A1:i', cellData);
+}
+
 export async function getHomePanel() : Promise<string[][]> {
     return getSheetData('Home!A1:K34');
 }
@@ -94,8 +103,8 @@ export async function getMealCheckin() : Promise<string[][]> {
     return getSheetData('Meal checkin!A1:L')
 }
 
-export async function getMealIntake() : Promise<string[][]> {
-    return getSheetData('Meal intake!A1:O')
+export async function getOutput() : Promise<string[][]> {
+    return getSheetData('output!A1:P')
 }
 
 export async function getAdminPin() : Promise<string[][]> {
@@ -104,4 +113,12 @@ export async function getAdminPin() : Promise<string[][]> {
 
 export async function getHotelPage() : Promise<string[][]> {
     return getHotelSheetData('Personal info Hotel 1 - EXPORT!A1:N')
+}
+
+export async function getHotelLocations() : Promise<string[][]> {
+    return getHotelSheetData('Builder!A1:B')
+}
+
+export async function getDalton25() : Promise<string[][]> {
+    return getSheetData('Dalton25!A1:I')
 }

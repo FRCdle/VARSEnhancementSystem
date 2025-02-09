@@ -1,12 +1,18 @@
+
+
 import Link from 'next/link';
 import NavLinks from '@/app/ui/dashboard/nav-links';
 import { PowerIcon } from '@heroicons/react/24/outline';
 import { signOut } from '@/auth';
 import Image from 'next/image';
 import { GAFirstLogoDark } from '../ga-first-logo';
-
+import ClickOutside from './event-dropdown/click-outside';
+import clsx from 'clsx';
+import EventDropDown from './event-dropdown/event-dropdown';
 
 export default function SideNav() {
+
+
   return (
     <div className=" flex h-full flex-col bg-sidenav-color px-3 py-4 md:px-2">
       <Link
@@ -17,6 +23,9 @@ export default function SideNav() {
           <GAFirstLogoDark/>
         </div>
       </Link>
+
+      <EventDropDown/>
+
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <NavLinks />
         <div className="hidden h-auto w-full grow rounded-md bg-sidenav-color md:block"></div>
