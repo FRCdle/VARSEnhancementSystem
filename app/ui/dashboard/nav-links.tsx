@@ -25,11 +25,6 @@ const links = [
     href: '/dashboard/meal-checkin', 
     icon: CheckBadgeIcon 
   },
-  { 
-    name: 'Output', 
-    href: '/dashboard/output', 
-    icon: CakeIcon 
-  },
   {
     name: 'BulkBadge',
     href: '/dashboard/bulkbadge',

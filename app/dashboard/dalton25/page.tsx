@@ -1,5 +1,5 @@
 "use client";
-import { getSheetData, getHomePanel, getMealCheckin, getDalton25, writeCellData, writeVolunteerCell, writeVolunteerData } from "@/app/lib/google-sheets.action";
+import { getSheetData, getHomePanel, getMealCheckin, getSync, writeCellData, writeVolunteerCell, writeVolunteerData } from "@/app/lib/google-sheets.action";
 import { IdleTimer } from "@/app/lib/idle-timer";
 import { useEffect, useState } from "react";
 
@@ -12,7 +12,7 @@ export default function Page() {
 
   useEffect(() => {
     if (isActive) {
-      getDalton25()
+      getSync()
         .then((data) => setData(data))
         .finally(() => {
           setTimeout(() => setRefreshToken(Math.random()), 3000); 
@@ -33,9 +33,12 @@ export default function Page() {
 
   const handleWrittenData = (row : number, column : number, newData : string) => {
     let copy = data?.slice()!;
+    copy?.map(
+      (row: string[], rowKey: number) =>
+        (data![rowKey] = row.slice(0, row.length - 1))
+      );
     copy[row][column] = newData;
     setWrittenData(copy);
-    console.log(writtenData);
   }
 
   return(
@@ -67,20 +70,20 @@ export default function Page() {
           >
             {row.map((cell : string, cellKey : number) => (
               <div key={cellKey} className={`${rowKey % 2 === 0 ? "bg-gray-200" : ""} font-semibold  items-center p-1`}>
-                    <div>
-                        <label className="text-m text-gray-500">
-                            <input
-                            
-                            defaultValue={cell}
-                            onChange={
-                                (e) => handleWrittenData(rowKey, cellKey, e.target.value)
-                            }
-                            className="h-8 mr-3 px-0.5 text-xs"
-                            name="cell-input"
-                            type="text"
-                            />
-                        </label>
-                    </div>
+                <div>
+                  <label className="text-m text-gray-500">
+                    <input
+                    
+                    defaultValue={cell}
+                    onChange={
+                        (e) => handleWrittenData(rowKey, cellKey, e.target.value)
+                    }
+                    className="h-8 mr-3 px-0.5 text-xs"
+                    name="cell-input"
+                    type="text"
+                    />
+                  </label>
+                </div>
               </div>
             ))}
           </div>

@@ -88,11 +88,11 @@ export async function writeVolCode(VOLCode : string[][]) {
 }
 
 export async function writeVolunteerCell(cellData : string[][], row : number, column : number) {
-    writeCellData('Dalton25!' + String.fromCharCode(column + 65) + (row + 1), cellData);
+    writeCellData('sync!' + String.fromCharCode(column + 65) + (row + 1), cellData);
 }
 
 export async function writeVolunteerData(cellData : string[][]) {
-    writeCellData('Dalton25!A1:i', cellData);
+    writeCellData('sync!A1:i', cellData);
 }
 
 export async function getHomePanel() : Promise<string[][]> {
@@ -119,6 +119,10 @@ export async function getHotelLocations() : Promise<string[][]> {
     return getHotelSheetData('Builder!A1:B')
 }
 
-export async function getDalton25() : Promise<string[][]> {
-    return getSheetData('Dalton25!A1:I')
+export async function getSync() : Promise<string[][]> {
+    return getSheetData('sync!A1:I')
+}
+
+export async function writeSync(cellData : string[][]) {
+    writeCellData('sync!A1:I', cellData);
 }

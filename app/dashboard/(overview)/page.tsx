@@ -1,5 +1,5 @@
 "use client";
-import { getHomePanel, getHotelLocations, writeVolCode } from "@/app/lib/google-sheets.action";
+import { getHomePanel, getHotelLocations, writeVolCode, getSync, writeSync } from "@/app/lib/google-sheets.action";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { IdleTimer } from "@/app/lib/idle-timer";
@@ -20,6 +20,44 @@ export default function Page() {
 
   const [hotelData, setHotelData] = useState<string[][]>();
   const [writtenHotelData, setWrittenHotelData] = useState<string[][]>();
+
+  const [syncData, setSyncData] = useState<string[][]>();
+  const [individiualSyncData, setIndividualSyncData] = useState<string[]>();
+  const [individualSyncDataRow, setIndividualSyncDataRow] = useState<number>();
+  const [writtenSyncData, setWrittenSyncData] = useState<string[][]>();
+  const [phoneNumberInput, setPhoneNumberInput] = useState("");
+
+
+  useEffect(() => {
+    if (isActive) {
+      getSync()
+        .then((syncData) => setSyncData(syncData))
+        .finally(() => {
+          setTimeout(() => setRefreshToken(Math.random()), 3000); 
+        });
+    } else {
+      setTimeout(() => setRefreshToken(Math.random()), 3000);
+    }
+  }, [refreshToken]);
+
+  const searchSyncInformation = (phoneNumber : string) => {
+    for (let i = 0; i < syncData!.length; ++i) {
+      if (syncData![i][8] === phoneNumber) {
+        setIndividualSyncData(syncData![i]);
+        setIndividualSyncDataRow(i);
+      }
+    }
+  }
+
+  const handleWrittenData = (row : number, column : number, newData : string) => {
+    let copy = syncData?.slice()!;
+    copy?.map(
+      (row: string[], rowKey: number) =>
+        (syncData![rowKey] = row.slice(0, row.length - 1))
+      );
+    copy[row][column] = newData;
+    setWrittenSyncData(copy);
+  }
 
   useEffect(() => {
     if (isActive) {
@@ -294,6 +332,79 @@ export default function Page() {
                   </tr>
                 </tbody>
               </table>
+            </div>
+          </div>
+
+          <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-5">
+            <div className="mb-3 justify-between gap-4 sm:flex">
+              <h5 className="text-xl font-semibold text-black">
+                Profile Editor
+              </h5>
+            </div>
+            <div>
+              <label className="text-m text-gray-500">
+                Phone Number: &nbsp;
+                <input
+                  onChange={(e) => setPhoneNumberInput(e.target.value)}
+                  className="h-8 mr-3 px-0.5 text-m font-normal"
+                  name="volcode-input"
+                  type="text"
+                />
+                <button
+                  onClick={() => {
+                    searchSyncInformation(phoneNumberInput);
+                    console.log(individiualSyncData);
+                  }}
+                  className="h-10 items-center rounded-lg bg-blue-500 px-4 text-m font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+                >
+                  Search Information
+                </button>
+              </label>
+            </div>
+
+            <div className="mt-3 text-sm text-gray-500">
+              <table className="text-left [&_th]:p-2 [&_th]:pr-6 [&_td]:p-2">
+                <tbody>
+                  <tr>
+                    <th>Role:</th>
+                    <td>
+                      <div>
+                          <label className="text-m text-gray-500">
+                              <input
+                              defaultValue={individiualSyncData?.[0]}
+                              onChange={
+                                (e) => handleWrittenData(individualSyncDataRow!, 0, e.target.value)
+                              }
+                              className="w-64 h-8 mr-3 px-0.5 text-xs"
+                              name="cell-input"
+                              type="text"
+                              />
+                          </label>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Name:</th>
+                    <td>{individiualSyncData?.[3]}</td>
+                  </tr>
+                  <tr>
+                    <th>Email:</th>
+                    <td>{individiualSyncData?.[7]}</td>
+                  </tr>
+                  
+                </tbody>
+              </table>
+
+              <button
+                  onClick={() => {
+                      writeSync(writtenSyncData!).then(() =>
+                      setRefreshToken(Math.random())
+                      );
+                  }}
+                  className="h-10 items-center rounded-lg bg-blue-500 px-4 text-m font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+                  >
+                  Change
+              </button>
             </div>
           </div>
 
