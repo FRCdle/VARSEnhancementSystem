@@ -32,12 +32,12 @@ export default function Page() {
    };
 
   const handleWrittenData = (row : number, column : number, newData : string) => {
-    const copy = data?.slice()!;
+    const copy = data?.slice();
     copy?.map(
       (row: string[], rowKey: number) =>
         (copy![rowKey] = row.slice(0, row.length - 1))
       );
-    copy[row][column] = newData;
+    copy![row][column] = newData;
     setWrittenData(copy);
   }
 

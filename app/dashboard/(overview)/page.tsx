@@ -42,8 +42,8 @@ export default function Page() {
   }, [refreshToken]);
 
   const searchSyncInformation = (phoneNumber : string) => {
-    const copy = syncData?.slice()!;
-    copy.map(
+    const copy = syncData?.slice();
+    copy?.map(
       (row: string[], rowKey: number) =>
         (copy![rowKey] = row.slice(0, row.length - 1))
       );
@@ -64,13 +64,13 @@ export default function Page() {
 
   const handleWrittenData = (row : number, column : number, newData : string) => {
     
-    const copy = writtenSyncData?.slice()!;
+    const copy = writtenSyncData?.slice();
     console.log(copy);
-    copy.map(
+    copy?.map(
       (row: string[], rowKey: number) =>
         (copy![rowKey] = row.slice(0, row.length))
       );
-    copy[row][column] = newData;
+    copy![row][column] = newData;
     setWrittenSyncData(copy);
   }
 
