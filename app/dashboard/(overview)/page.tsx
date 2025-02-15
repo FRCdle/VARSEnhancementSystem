@@ -485,7 +485,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-4">
+          <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-5">
             <div className="mb-3 justify-between gap-4 sm:flex">
               <h5 className="text-xl font-semibold text-black">
                 System Trackers
@@ -516,7 +516,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-4">
+          <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-6">
             <div className="mb-3 justify-between gap-4 sm:flex">
               <h5 className="text-xl font-semibold text-black ">
                 Total Meal Registrations
@@ -548,7 +548,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-4">
+          <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-6">
             <div className="mb-3 justify-between gap-4 sm:flex">
               <h5 className="text-xl font-semibold text-black ">
                 Total Meal Registrations
