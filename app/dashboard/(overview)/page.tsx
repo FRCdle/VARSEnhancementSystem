@@ -1,5 +1,11 @@
 "use client";
-import { getHomePanel, getHotelLocations, writeVolCode, getSync, writeSync } from "@/app/lib/google-sheets.action";
+import {
+  getHomePanel,
+  getHotelLocations,
+  writeVolCode,
+  getSync,
+  writeSync,
+} from "@/app/lib/google-sheets.action";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { IdleTimer } from "@/app/lib/idle-timer";
@@ -13,7 +19,7 @@ const DonutChart = dynamic(() => import("@/app/ui/charts/donutchart"), {
 });
 
 export default function Page() {
-  const [data, setData] = useState<string[][]>(new Array(1000).fill(new Array(1000).fill("loading...")));
+  const [data, setData] = useState<string[][]>();
   const [refreshToken, setRefreshToken] = useState(Math.random());
   const [syncRefreshToken, setSyncRefreshToken] = useState(Math.random());
   const [VOLCodeInput, setVOLCodeInput] = useState("");
@@ -28,25 +34,24 @@ export default function Page() {
   const [writtenSyncData, setWrittenSyncData] = useState<string[][]>();
   const [phoneNumberInput, setPhoneNumberInput] = useState("");
 
-
   useEffect(() => {
     if (isActive) {
       getSync()
         .then((syncData) => setSyncData(syncData))
         .finally(() => {
-          setTimeout(() => setSyncRefreshToken(Math.random()), 3000); 
+          setTimeout(() => setSyncRefreshToken(Math.random()), 3000);
         });
     } else {
       setTimeout(() => setSyncRefreshToken(Math.random()), 3000);
     }
   }, [refreshToken]);
 
-  const searchSyncInformation = (phoneNumber : string) => {
+  const searchSyncInformation = (phoneNumber: string) => {
     const copy = syncData?.slice();
     copy?.map(
       (row: string[], rowKey: number) =>
         (copy![rowKey] = row.slice(0, row.length - 1))
-      );
+    );
     setWrittenSyncData(copy);
 
     for (let i = 0; i < syncData!.length; ++i) {
@@ -55,24 +60,23 @@ export default function Page() {
         setIndividualSyncDataRow(i);
       }
     }
-  }
+  };
 
   /*
   Raymond note: having issues modifying the writtenSyncData multiple times (two changes)
   That's why the setWrittenSyncData(syncData); is there above
   */
 
-  const handleWrittenData = (row : number, column : number, newData : string) => {
-    
+  const handleWrittenData = (row: number, column: number, newData: string) => {
     const copy = writtenSyncData?.slice();
     console.log(copy);
     copy?.map(
       (row: string[], rowKey: number) =>
         (copy![rowKey] = row.slice(0, row.length))
-      );
+    );
     copy![row][column] = newData;
     setWrittenSyncData(copy);
-  }
+  };
 
   useEffect(() => {
     if (isActive) {
@@ -203,24 +207,20 @@ export default function Page() {
 
             <div className="text-xs rounded-sm bg-white px-5 pb-2.5 pt-2 shadow-default sm:px-7.5 xl:pb-1">
               <div className="flex flex-col">
-                {hotelData
-                  ?.map((row: string[], rowKey: number) => (
-                    <div
-                      className={`grid grid-cols-2`}
-                      key={rowKey}
-                    >
-                      {row.map((cell: string, cellKey: number) => (
-                        <div
-                          key={cellKey}
-                          className={`
+                {hotelData?.map((row: string[], rowKey: number) => (
+                  <div className={`grid grid-cols-2`} key={rowKey}>
+                    {row.map((cell: string, cellKey: number) => (
+                      <div
+                        key={cellKey}
+                        className={`
                                     ${cellKey === 1 && cell.includes("INSERT") ? "bg-red-400" : ""}
                                     border-b border-stroke items-center gap-3 p-2.5 xl:p-2.5`}
-                        >
-                          <p className="text-black sm:block">{cell}</p>
-                        </div>
-                      ))}
-                    </div>
-                  ))}
+                      >
+                        <p className="text-black sm:block">{cell}</p>
+                      </div>
+                    ))}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -258,7 +258,6 @@ export default function Page() {
                                     ${cell === "ACTIVE" ? "bg-green-400" : ""}
                                     border-b border-stroke items-center gap-3 p-2.5 xl:p-2.5`}
                         >
-
                           <p className="text-gray-500 sm:block">{cell}</p>
                         </div>
                       ))}
@@ -280,7 +279,7 @@ export default function Page() {
               <></>
             )}
           </div>
-{/* 
+          {/* 
           <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-4">
             
           </div> */}
@@ -305,7 +304,7 @@ export default function Page() {
                   onClick={() => {
                     writeVolCode([[VOLCodeInput]]).then(() =>
                       setRefreshToken(Math.random())
-                    )
+                    );
                   }}
                   className="h-10 items-center rounded-lg bg-blue-500 px-4 text-m font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
                 >
@@ -384,17 +383,21 @@ export default function Page() {
                     <th>Role:</th>
                     <td>
                       <div>
-                          <label className="text-m text-gray-500">
-                              <input
-                              defaultValue={individiualSyncData?.[0]}
-                              onChange={
-                                (e) => handleWrittenData(individualSyncDataRow!, 0, e.target.value)
-                              }
-                              className="w-64 h-8 mr-3 px-0.5 text-xs"
-                              name="cell-input"
-                              type="text"
-                              />
-                          </label>
+                        <label className="text-m text-gray-500">
+                          <input
+                            defaultValue={individiualSyncData?.[0]}
+                            onChange={(e) =>
+                              handleWrittenData(
+                                individualSyncDataRow!,
+                                0,
+                                e.target.value
+                              )
+                            }
+                            className="w-64 h-8 mr-3 px-0.5 text-xs"
+                            name="cell-input"
+                            type="text"
+                          />
+                        </label>
                       </div>
                     </td>
                   </tr>
@@ -402,17 +405,21 @@ export default function Page() {
                     <th>Name:</th>
                     <td>
                       <div>
-                          <label className="text-m text-gray-500">
-                              <input
-                              defaultValue={individiualSyncData?.[3]}
-                              onChange={
-                                (e) => handleWrittenData(individualSyncDataRow!, 3, e.target.value)
-                              }
-                              className="w-64 h-8 mr-3 px-0.5 text-xs"
-                              name="cell-input"
-                              type="text"
-                              />
-                          </label>
+                        <label className="text-m text-gray-500">
+                          <input
+                            defaultValue={individiualSyncData?.[3]}
+                            onChange={(e) =>
+                              handleWrittenData(
+                                individualSyncDataRow!,
+                                3,
+                                e.target.value
+                              )
+                            }
+                            className="w-64 h-8 mr-3 px-0.5 text-xs"
+                            name="cell-input"
+                            type="text"
+                          />
+                        </label>
                       </div>
                     </td>
                   </tr>
@@ -420,34 +427,36 @@ export default function Page() {
                     <th>Email:</th>
                     <td>
                       <div>
-                          <label className="text-m text-gray-500">
-                              <input
-                              defaultValue={individiualSyncData?.[7]}
-                              onChange={
-                                (e) => handleWrittenData(individualSyncDataRow!, 7, e.target.value)
-                              }
-                              className="w-64 h-8 mr-3 px-0.5 text-xs"
-                              name="cell-input"
-                              type="text"
-                              />
-                          </label>
+                        <label className="text-m text-gray-500">
+                          <input
+                            defaultValue={individiualSyncData?.[7]}
+                            onChange={(e) =>
+                              handleWrittenData(
+                                individualSyncDataRow!,
+                                7,
+                                e.target.value
+                              )
+                            }
+                            className="w-64 h-8 mr-3 px-0.5 text-xs"
+                            name="cell-input"
+                            type="text"
+                          />
+                        </label>
                       </div>
                     </td>
                   </tr>
-                  
                 </tbody>
               </table>
 
               <button
-                  onClick={() => {
-                      writeSync(writtenSyncData!).then(() =>
-                        setSyncRefreshToken(Math.random())
-                      );
-                  }
-                }
-                  className="h-10 items-center rounded-lg bg-blue-500 px-4 text-m font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
-                  >
-                  Change
+                onClick={() => {
+                  writeSync(writtenSyncData!).then(() =>
+                    setSyncRefreshToken(Math.random())
+                  );
+                }}
+                className="h-10 items-center rounded-lg bg-blue-500 px-4 text-m font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+              >
+                Change
               </button>
             </div>
           </div>
