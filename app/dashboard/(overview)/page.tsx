@@ -6,7 +6,7 @@ import {
   getSync,
   writeSync,
 } from "@/app/lib/google-sheets.action";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { IdleTimer } from "@/app/lib/idle-timer";
 import Link from "next/link";
@@ -33,6 +33,11 @@ export default function Page() {
   const [individualSyncDataRow, setIndividualSyncDataRow] = useState<number>();
   const [writtenSyncData, setWrittenSyncData] = useState<string[][]>();
   const [phoneNumberInput, setPhoneNumberInput] = useState("");
+  
+  const [key, setKey] = useState(0); //this is used to update input default value fields (forced rerender)
+  const updateValue = () => {
+    setKey((prevKey) => prevKey + 1); // Change key to force re-mount
+  };
 
   useEffect(() => {
     if (isActive) {
@@ -359,6 +364,7 @@ export default function Page() {
               <label className="text-m text-gray-500">
                 Phone Number: &nbsp;
                 <input
+
                   onChange={(e) => setPhoneNumberInput(e.target.value)}
                   className="h-8 mr-3 px-0.5 text-m font-normal"
                   name="volcode-input"
@@ -367,7 +373,7 @@ export default function Page() {
                 <button
                   onClick={() => {
                     searchSyncInformation(phoneNumberInput);
-                    console.log(individiualSyncData);
+                    updateValue()
                   }}
                   className="h-10 items-center rounded-lg bg-blue-500 px-4 text-m font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
                 >
@@ -376,7 +382,7 @@ export default function Page() {
               </label>
             </div>
 
-            <div className="mt-3 text-sm text-gray-500">
+            {writtenSyncData ? (<div className="mt-3 text-sm text-gray-500">
               <table className="text-left [&_th]:p-2 [&_th]:pr-6 [&_td]:p-2">
                 <tbody>
                   <tr>
@@ -385,6 +391,7 @@ export default function Page() {
                       <div>
                         <label className="text-m text-gray-500">
                           <input
+                            key={key}
                             defaultValue={individiualSyncData?.[0]}
                             onChange={(e) =>
                               handleWrittenData(
@@ -407,6 +414,7 @@ export default function Page() {
                       <div>
                         <label className="text-m text-gray-500">
                           <input
+                          key={key}
                             defaultValue={individiualSyncData?.[3]}
                             onChange={(e) =>
                               handleWrittenData(
@@ -429,6 +437,7 @@ export default function Page() {
                       <div>
                         <label className="text-m text-gray-500">
                           <input
+                          key={key}
                             defaultValue={individiualSyncData?.[7]}
                             onChange={(e) =>
                               handleWrittenData(
@@ -458,7 +467,7 @@ export default function Page() {
               >
                 Change
               </button>
-            </div>
+            </div>) : <></>}
           </div>
 
           <div className="col-span-12 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-7">
