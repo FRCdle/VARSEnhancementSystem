@@ -1,18 +1,31 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { badgePDFtoLink, base64ToPDFLink } from '@/app/lib/pdf-utils';
+import { badgePDFtoBlobs } from '@/app/lib/pdf-utils';
 import { getAdminPin } from '@/app/lib/google-sheets.action';
+
+
+async function getLink(pdfBlob: Blob): Promise<HTMLAnchorElement> {
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(pdfBlob);
+    const fileName = "output";
+    link.download = fileName;
+    return link;
+} 
+
 
 export default function Page() {
 
-    const [text, setText] = useState<string>("");
-    const [waitMessage, setWaitMessage] = useState<string>("");
+    const [response, setResponse] = useState<string>("");
+    const [waitMessage, setWaitMessage] = useState<string>("Press button to load all badge PDFs. This process can take up to 30 seconds.");
+
+    const [namesList, setNamesList] = useState<string[]>();
+    const [blobs, setBlobs] = useState<{full: Blob, backsOnly: Blob, individual: Blob[]}>();
 
     const handleClick = async () => {
-        setWaitMessage("Generating PDFs...this can take up to 20 seconds");
+        setWaitMessage("Loading Badge PDFs. This process can take up to 30 seconds.");
         try {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbwspCU1f5sHgYsow7KT5PGP3esJ2YN2WMcX7fb-E7HG3qZ9bK2E_IU5GDBfXz_UeQRWZg/exec');
+            const response = await fetch('https://script.google.com/macros/s/AKfycbw1fYJXyk5Bx3kjF2AI-bVIlDyBiXD6fpcMtolOkXYNSMz5ACa3IF6klVm6GkARk8Gg/exec');
             console.log(response); 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -20,27 +33,47 @@ export default function Page() {
             const data = await response.text();
 
             // triggers the useEffect to download the PDF if data isn't empty
-            setText(data);
+            setResponse(data);
         } catch (error) {
             console.error('Fetch error:', error);
-            setText('Error fetching data.'); 
+            setResponse('Error fetching data.'); 
         }
     }
 
-    const downloadPDF = async () => {
-        badgePDFtoLink(text)
-            .then((link) => link.click());
+    const clickFull = async () => {
+        if (blobs) {
+            getLink(blobs.full)
+                .then((link) => {link.click()});
+        }
     }
 
+    const clickBacks = async () => {
+        if (blobs) {
+            getLink(blobs.backsOnly)
+                .then((link) => {link.click()});
+        }
+    }
+
+    const clickIndividual = async (index: number) => {
+        if (blobs) {
+            getLink(blobs.individual[index])
+                .then((link) => {link.click()});
+        }
+    }
+    
     useEffect(
         () => {
-            if (text == "" || text == "setup required") {
+            if (response == "" || response == "setup required") {
                 // handle error
             } else {
-                downloadPDF();
+                const temp = response.split(",");
+                const [PDF, ...tempNamesList] = temp;
+                setNamesList(tempNamesList);
+                badgePDFtoBlobs(PDF, tempNamesList.length)
+                    .then((blobs) => setBlobs(blobs));
                 setWaitMessage("Done!");
             }
-        }, [text]);
+        }, [response]);
 
     return (
         <main>
@@ -55,21 +88,21 @@ export default function Page() {
                             Create PDFs
                         </h5>
                     </div>
+                    <div className="text-md">
+                        {waitMessage}
+                    </div>
                     <div className='mb-3 inline-flex align-middle text-md'>
                         <button
-                            className="rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-400"
+                            className={`rounded-md px-4 py-2 text-sm text-white transition-colors ${blobs? "bg-gray-500" : "bg-blue-500 hover:bg-blue-400"}`}
                             onClick={
                                 () => {
                                     handleClick();
                                 }}
                             >
-                            Populate and Generate PDFs
+                            Load Badges
                         </button>
-                        <hr></hr>
-                        <p>
-                            {waitMessage}
-                        </p>
                     </div>
+                    
                 </div>
 
                 <div className="col-span-3 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-3">
@@ -78,6 +111,26 @@ export default function Page() {
                             Download All Badges
                         </h5>
                     </div>
+                    <div>
+                        <button
+                            className="rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-400"
+                            onClick={
+                                () => {
+                                    clickFull();
+                                }}
+                            >
+                            Full
+                        </button>
+                        <button
+                            className="rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-400"
+                            onClick={
+                                () => {
+                                    clickBacks();
+                                }}
+                            >
+                            Backs Only
+                        </button>
+                    </div>
                 </div>
 
                 <div className="col-span-3 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-3">
@@ -85,6 +138,17 @@ export default function Page() {
                         <h5 className="text-xl font-semibold text-black ">
                             Download Individual Badges
                         </h5>
+                    </div>
+                    <div>
+                        <button
+                            className="rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-400"
+                            onClick={
+                                () => {
+                                    clickIndividual(1);
+                                }}
+                            >
+                            Download
+                        </button>
                     </div>
                 </div>
 
