@@ -6,9 +6,8 @@ import { PowerIcon } from '@heroicons/react/24/outline';
 import { signOut } from '@/auth';
 import Image from 'next/image';
 import { GAFirstLogoDark } from '../ga-first-logo';
-import ClickOutside from './event-dropdown/click-outside';
 import clsx from 'clsx';
-import EventDropDown from './event-dropdown/event-dropdown';
+import EventDropDown from './event-select/event-dropdown';
 
 export default function SideNav() {
 

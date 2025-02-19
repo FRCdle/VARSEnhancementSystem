@@ -1,8 +1,40 @@
 'use server';
 import { google } from "googleapis";
-import { useEvent } from "../ui/dashboard/event-dropdown/event-state";
 
-export async function getSheetData(spreadsheetRange: string) : Promise<string[][]> {
+function getSpreadsheetID(eventID: number) : string {
+    console.log("seeing this? " + eventID);
+    if (eventID == 1) {
+        return process.env.gainesville_spreadsheet_id as string;
+    } else if (eventID == 2) {
+        return Buffer.from(process.env.dalton_spreadsheet_id as string, 'base64').toString('ascii');
+    } else if (eventID == 3) {
+        return process.env.gwinnett_spreadsheet_id as string;
+    } else if (eventID == 4) {
+        return process.env.statesboro_spreadsheet_id as string;
+    } else if (eventID == 5) {
+        return process.env.albany_spreadsheet_id as string;
+    } else {
+        return process.env.macon_spreadsheet_id as string;
+    }
+}
+
+function getHotelSpreadsheetID(eventID: number) : string {
+    if (eventID == 1) {
+        return process.env.gainesville_hotel_spreadsheet_id as string;
+    } else if (eventID == 2) {
+        return Buffer.from(process.env.dalton_hotel_spreadsheet_id as string, 'base64').toString('ascii');
+    } else if (eventID == 3) {
+        return process.env.gwinnett_hotel_spreadsheet_id as string;
+    } else if (eventID == 4) {
+        return process.env.statesboro_hotel_spreadsheet_id as string;
+    } else if (eventID == 5) {
+        return process.env.albany_hotel_spreadsheet_id as string;
+    } else {
+        return process.env.macon_hotel_spreadsheet_id as string;
+    }
+}
+
+export async function getSheetData(spreadsheetRange: string, eventID: number) : Promise<string[][]> {
   const glAuth = await google.auth.getClient({
         projectId: process.env.project_id,
         credentials: {
@@ -18,7 +50,7 @@ export async function getSheetData(spreadsheetRange: string) : Promise<string[][
 
     const glSheets = google.sheets({ version: "v4", auth: glAuth });
     const data = await glSheets.spreadsheets.values.get({
-        spreadsheetId: process.env["spreadsheet_id"],
+        spreadsheetId: getSpreadsheetID(eventID),
         range: spreadsheetRange,
     });
     //console.log(process.env["spreadsheet_id"]);
@@ -26,7 +58,7 @@ export async function getSheetData(spreadsheetRange: string) : Promise<string[][
     return { data: <string[][]> data.data.values }.data;
 }
 
-export async function getHotelSheetData(spreadsheetRange: string) : Promise<string[][]> {
+export async function getHotelSheetData(spreadsheetRange: string, eventID: number) : Promise<string[][]> {
     const glAuth = await google.auth.getClient({
           projectId: process.env.project_id,
           credentials: {
@@ -43,7 +75,7 @@ export async function getHotelSheetData(spreadsheetRange: string) : Promise<stri
       const glSheets = google.sheets({ version: "v4", auth: glAuth });
   
       const data = await glSheets.spreadsheets.values.get({
-          spreadsheetId: process.env.hotel_spreadsheet_id,
+          spreadsheetId: getHotelSpreadsheetID(eventID),
           range: spreadsheetRange,
       });
   
@@ -55,7 +87,7 @@ export async function getHotelSheetData(spreadsheetRange: string) : Promise<stri
  * @param spreadsheetCell the specific range to write to
  * @param values the 2D array of strings inputted into that range
  */
-export async function writeCellData(spreadsheetRange: string, values : string[][]) {
+export async function writeCellData(spreadsheetRange: string, values : string[][], eventID: number) {
     const glAuth = await google.auth.getClient({
         projectId: process.env.project_id,
         credentials: {
@@ -73,7 +105,7 @@ export async function writeCellData(spreadsheetRange: string, values : string[][
 
     await glSheets.spreadsheets.values.update({
         requestBody: {values : values},
-        spreadsheetId: process.env.spreadsheet_id,
+        spreadsheetId: getSpreadsheetID(eventID),
         range: spreadsheetRange,
         valueInputOption: "RAW"
     });
@@ -83,46 +115,46 @@ export async function writeCellData(spreadsheetRange: string, values : string[][
  * Writes the given input to the cell that asks for VOLCode
  * @param VOLCode
  */
-export async function writeVolCode(VOLCode : string[][]) {
-    writeCellData('Home!E3', VOLCode);
+export async function writeVolCode(VOLCode : string[][], eventID: number) {
+    writeCellData('Home!E3', VOLCode, eventID);
 }
 
-export async function writeVolunteerCell(cellData : string[][], row : number, column : number) {
-    writeCellData('sync!' + String.fromCharCode(column + 65) + (row + 1), cellData);
+export async function writeVolunteerCell(cellData : string[][], row : number, column : number, eventID: number) {
+    writeCellData('sync!' + String.fromCharCode(column + 65) + (row + 1), cellData, eventID);
 }
 
-export async function writeVolunteerData(cellData : string[][]) {
-    writeCellData('sync!A1:i', cellData);
+export async function writeVolunteerData(cellData : string[][], eventID: number) {
+    writeCellData('sync!A1:i', cellData, eventID);
 }
 
-export async function getHomePanel() : Promise<string[][]> {
-    return getSheetData('Home!A1:K34');
+export async function getHomePanel(eventID: number) : Promise<string[][]> {
+    return getSheetData('Home!A1:K34', eventID);
 }
 
-export async function getMealCheckin() : Promise<string[][]> {
-    return getSheetData('Meal checkin!A1:L')
+export async function getMealCheckin(eventID: number) : Promise<string[][]> {
+    return getSheetData('Meal checkin!A1:L', eventID)
 }
 
-export async function getOutput() : Promise<string[][]> {
-    return getSheetData('output!A1:P')
+export async function getOutput(eventID: number) : Promise<string[][]> {
+    return getSheetData('output!A1:P', eventID)
 }
 
-export async function getAdminPin() : Promise<string[][]> {
-    return getSheetData('Home!B18')
+export async function getAdminPin(eventID: number) : Promise<string[][]> {
+    return getSheetData('Home!B18', eventID)
 }
 
-export async function getHotelPage() : Promise<string[][]> {
-    return getHotelSheetData('Personal info Hotel 1 - EXPORT!A1:N')
+export async function getHotelPage(eventID: number) : Promise<string[][]> {
+    return getHotelSheetData('Personal info Hotel 1 - EXPORT!A1:N', eventID)
 }
 
-export async function getHotelLocations() : Promise<string[][]> {
-    return getHotelSheetData('Builder!A1:B')
+export async function getHotelLocations(eventID: number) : Promise<string[][]> {
+    return getHotelSheetData('Builder!A1:B', eventID)
 }
 
-export async function getSync() : Promise<string[][]> {
-    return getSheetData('sync!A1:I')
+export async function getSync(eventID: number) : Promise<string[][]> {
+    return getSheetData('sync!A1:I', eventID)
 }
 
-export async function writeSync(cellData : string[][]) {
-    writeCellData('sync!A1:I', cellData);
+export async function writeSync(cellData : string[][], eventID: number) {
+    writeCellData('sync!A1:I', cellData, eventID);
 }

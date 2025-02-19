@@ -1,4 +1,5 @@
 "use client";
+import { myStore } from "@/app/event-context";
 import {
   getSheetData,
   getHomePanel,
@@ -12,6 +13,8 @@ export default function Page() {
   const [data, setData] = useState<string[][]>();
   const [refreshToken, setRefreshToken] = useState(Math.random());
   const [isActive, setIsActive] = useState(true);
+
+  const { eventID, setEvent } = myStore();
 
   const individualMealData = data?.slice(5, 14);
   individualMealData?.map(
@@ -43,7 +46,7 @@ export default function Page() {
 
   useEffect(() => {
     if (isActive) {
-      getMealCheckin()
+      getMealCheckin(eventID)
         .then((data) => setData(data))
         .finally(() => {
           setTimeout(() => setRefreshToken(Math.random()), 3000); 

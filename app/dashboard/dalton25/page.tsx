@@ -1,4 +1,5 @@
 "use client";
+import { myStore } from "@/app/event-context";
 import { getSheetData, getHomePanel, getMealCheckin, getSync, writeCellData, writeVolunteerCell, writeVolunteerData } from "@/app/lib/google-sheets.action";
 import { IdleTimer } from "@/app/lib/idle-timer";
 import { useEffect, useState } from "react";
@@ -10,9 +11,11 @@ export default function Page() {
   const [isActive, setIsActive] = useState(true);
   const [writtenData, setWrittenData] = useState<string[][]>();
 
+  const { eventID, setEvent } = myStore();
+
   useEffect(() => {
     if (isActive) {
-      getSync()
+      getSync(eventID)
         .then((data) => setData(data))
         .finally(() => {
           setTimeout(() => setRefreshToken(Math.random()), 3000); 
@@ -54,7 +57,7 @@ export default function Page() {
     <div className={`text-xs rounded-sm bg-white px-5 pb-2.5 pt-6 shadow-default`}>
         <button
             onClick={() => {
-                writeVolunteerData(writtenData!).then(() =>
+                writeVolunteerData(writtenData!, eventID).then(() =>
                 setRefreshToken(Math.random())
                 );
             }}

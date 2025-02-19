@@ -12,7 +12,7 @@ import { IdleTimer } from "@/app/lib/idle-timer";
 import Link from "next/link";
 import clsx from "clsx";
 import { FaBed } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import { myStore } from "@/app/event-context";
 
 const DonutChart = dynamic(() => import("@/app/ui/charts/donutchart"), {
   ssr: false, // This ensures the component is not SSR'd
@@ -33,6 +33,8 @@ export default function Page() {
   const [individualSyncDataRow, setIndividualSyncDataRow] = useState<number>();
   const [writtenSyncData, setWrittenSyncData] = useState<string[][]>();
   const [phoneNumberInput, setPhoneNumberInput] = useState("");
+
+  const { eventID, setEvent } = myStore();
   
   const [key, setKey] = useState(0); //this is used to update input default value fields (forced rerender)
   const updateValue = () => {
@@ -40,8 +42,9 @@ export default function Page() {
   };
 
   useEffect(() => {
+    console.log(eventID);
     if (isActive) {
-      getSync()
+      getSync(eventID)
         .then((syncData) => setSyncData(syncData))
         .finally(() => {
           setTimeout(() => setSyncRefreshToken(Math.random()), 3000);
@@ -85,7 +88,7 @@ export default function Page() {
 
   useEffect(() => {
     if (isActive) {
-      getHomePanel()
+      getHomePanel(eventID)
         .then((data) => setData(data))
         .finally(() => {
           setTimeout(() => setRefreshToken(Math.random()), 3000);
@@ -97,7 +100,7 @@ export default function Page() {
 
   useEffect(() => {
     if (isActive) {
-      getHotelLocations()
+      getHotelLocations(eventID)
         .then((hotelData) => setHotelData(hotelData))
         .finally(() => {
           setTimeout(() => setRefreshToken(Math.random()), 3000);
@@ -307,7 +310,7 @@ export default function Page() {
                 />
                 <button
                   onClick={() => {
-                    writeVolCode([[VOLCodeInput]]).then(() =>
+                    writeVolCode([[VOLCodeInput]], eventID).then(() =>
                       setRefreshToken(Math.random())
                     );
                   }}
@@ -459,7 +462,7 @@ export default function Page() {
 
               <button
                 onClick={() => {
-                  writeSync(writtenSyncData!).then(() =>
+                  writeSync(writtenSyncData!, eventID).then(() =>
                     setSyncRefreshToken(Math.random())
                   );
                 }}
