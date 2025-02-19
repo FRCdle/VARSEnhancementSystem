@@ -6,13 +6,10 @@ import { sql } from '@vercel/postgres';
 import type { User } from '@/app/lib/definitions';
 import bcrypt from 'bcrypt';
 import { getAdminPin } from './app/lib/google-sheets.action';
-import { myStore } from './app/event-context';
-
-const { eventID, setEvent } = myStore();
  
 async function getSystemPin(): Promise<string | undefined> {
   try {
-    const user = await getAdminPin(eventID);
+    const user = await getAdminPin(1);
     return user[0][0];
   } catch (error) {
     console.error('Failed to fetch pin:', error);

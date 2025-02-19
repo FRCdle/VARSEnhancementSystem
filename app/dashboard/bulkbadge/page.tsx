@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { badgePDFtoBlobs } from '@/app/lib/pdf-utils';
-import { getAdminPin } from '@/app/lib/google-sheets.action';
+import { getAdminPin, getBulkbadgeLink } from '@/app/lib/google-sheets.action';
+import { myStore } from '@/app/event-context';
 
 
 async function getLink(pdfBlob: Blob): Promise<HTMLAnchorElement> {
@@ -22,10 +23,13 @@ export default function Page() {
     const [namesList, setNamesList] = useState<string[]>();
     const [blobs, setBlobs] = useState<{full: Blob, backsOnly: Blob, individual: Blob[]}>();
 
+    const { eventID, setEvent } = myStore();
+
     const handleClick = async () => {
         setWaitMessage("Loading Badge PDFs. This process can take up to 30 seconds.");
         try {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbw1fYJXyk5Bx3kjF2AI-bVIlDyBiXD6fpcMtolOkXYNSMz5ACa3IF6klVm6GkARk8Gg/exec');
+            const link = await getBulkbadgeLink(eventID);
+            const response = await fetch(link[0][0]);
             console.log(response); 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);

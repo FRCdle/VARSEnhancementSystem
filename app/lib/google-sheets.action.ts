@@ -6,15 +6,15 @@ function getSpreadsheetID(eventID: number) : string {
     if (eventID == 1) {
         return process.env.gainesville_spreadsheet_id as string;
     } else if (eventID == 2) {
-        return Buffer.from(process.env.dalton_spreadsheet_id as string, 'base64').toString('ascii');
+        return Buffer.from(process.env.dalton_spreadsheet_id as string, 'base64').toString('ascii'); // done
     } else if (eventID == 3) {
-        return process.env.gwinnett_spreadsheet_id as string;
+        return process.env.gwinnett_spreadsheet_id as string; // done
     } else if (eventID == 4) {
-        return process.env.statesboro_spreadsheet_id as string;
+        return process.env.statesboro_spreadsheet_id as string; // done
     } else if (eventID == 5) {
-        return process.env.albany_spreadsheet_id as string;
+        return process.env.albany_spreadsheet_id as string; // done
     } else {
-        return process.env.macon_spreadsheet_id as string;
+        return process.env.macon_spreadsheet_id as string; // done
     }
 }
 
@@ -157,4 +157,8 @@ export async function getSync(eventID: number) : Promise<string[][]> {
 
 export async function writeSync(cellData : string[][], eventID: number) {
     writeCellData('sync!A1:I', cellData, eventID);
+}
+
+export async function getBulkbadgeLink(eventID: number) : Promise<string[][]> {
+    return getSheetData('Home!A29', eventID);
 }
