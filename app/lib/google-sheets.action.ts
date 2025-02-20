@@ -2,7 +2,6 @@
 import { google } from "googleapis";
 
 function getSpreadsheetID(eventID: number) : string {
-    console.log("seeing this? " + eventID);
     if (eventID == 1) {
         return process.env.gainesville_spreadsheet_id as string;
     } else if (eventID == 2) {

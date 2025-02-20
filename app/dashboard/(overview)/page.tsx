@@ -42,7 +42,6 @@ export default function Page() {
   };
 
   useEffect(() => {
-    console.log(eventID);
     if (isActive) {
       getSync(eventID)
         .then((syncData) => setSyncData(syncData))
