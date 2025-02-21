@@ -106,7 +106,7 @@ export async function writeCellData(spreadsheetRange: string, values : string[][
         requestBody: {values : values},
         spreadsheetId: getSpreadsheetID(eventID),
         range: spreadsheetRange,
-        valueInputOption: "RAW"
+        valueInputOption: "USER_ENTERED"
     });
 }
 

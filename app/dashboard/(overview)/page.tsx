@@ -57,16 +57,23 @@ export default function Page() {
     const copy = syncData?.slice();
     copy?.map(
       (row: string[], rowKey: number) =>
-        (copy![rowKey] = row.slice(0, row.length - 1))
+        (copy![rowKey] = row.slice(0, row.length))
     );
     setWrittenSyncData(copy);
-
+    let found = false;
     for (let i = 0; i < syncData!.length; ++i) {
       if (syncData![i][8] === phoneNumber) {
         setIndividualSyncData(syncData![i]);
         setIndividualSyncDataRow(i);
+        found = true;
       }
     }
+    if (!found) {
+        const noEntry = ["NO ENTRY","NO ENTRY","NO ENTRY","NO ENTRY","NO ENTRY","NO ENTRY","NO ENTRY","NO ENTRY","NO ENTRY","NO ENTRY"];
+        setIndividualSyncData(noEntry);
+      
+    }
+
   };
 
   /*
@@ -445,6 +452,29 @@ export default function Page() {
                               handleWrittenData(
                                 individualSyncDataRow!,
                                 7,
+                                e.target.value
+                              )
+                            }
+                            className="w-64 h-8 mr-3 px-0.5 text-xs"
+                            name="cell-input"
+                            type="text"
+                          />
+                        </label>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Phone Number:</th>
+                    <td>
+                      <div>
+                        <label className="text-m text-gray-500">
+                          <input
+                          key={key}
+                            defaultValue={individiualSyncData?.[8]}
+                            onChange={(e) =>
+                              handleWrittenData(
+                                individualSyncDataRow!,
+                                8,
                                 e.target.value
                               )
                             }

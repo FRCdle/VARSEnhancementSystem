@@ -30,16 +30,6 @@ const links = [
     href: '/dashboard/bulkbadge',
     icon: DocumentDuplicateIcon,
   },
-  {
-    name: 'Hotel Accommodations',
-    href: '/dashboard/hotel-accommodations',
-    icon: FaBed,
-  },
-  {
-    name: 'Dalton25',
-    href: '/dashboard/dalton25',
-    icon: UsersIcon,
-  }
 ];
 
 export default function NavLinks() {
