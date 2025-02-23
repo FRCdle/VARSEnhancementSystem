@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { badgePDFtoBlobs } from '@/app/lib/pdf-utils';
 import { getAdminPin, getBulkbadgeLink } from '@/app/lib/google-sheets.action';
 import { myStore } from '@/app/event-context';
+import { Field, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
 
 
 async function getLink(pdfBlob: Blob): Promise<HTMLAnchorElement> {
@@ -20,7 +21,8 @@ export default function Page() {
     const [response, setResponse] = useState<string>("");
     const [waitMessage, setWaitMessage] = useState<string>("Press button to load all badge PDFs. This process can take up to 30 seconds.");
 
-    const [namesList, setNamesList] = useState<string[]>();
+    const [namesList, setNamesList] = useState<string[]>(["none"]);
+    const [selectedName, setSelectedName] = useState(0);
     const [blobs, setBlobs] = useState<{full: Blob, backsOnly: Blob, individual: Blob[]}>();
 
     const { eventID, setEvent } = myStore();
@@ -48,6 +50,8 @@ export default function Page() {
         if (blobs) {
             getLink(blobs.full)
                 .then((link) => {link.click()});
+        } else {
+            alert("Please load badges first (click the button in the first box).");
         }
     }
 
@@ -55,13 +59,17 @@ export default function Page() {
         if (blobs) {
             getLink(blobs.backsOnly)
                 .then((link) => {link.click()});
+        } else {
+            alert("Please load badges first (click the button in the first box).");
         }
     }
 
-    const clickIndividual = async (index: number) => {
+    const clickIndividual = async () => {
         if (blobs) {
-            getLink(blobs.individual[index])
+            getLink(blobs.individual[selectedName])
                 .then((link) => {link.click()});
+        } else {
+            alert("Please load badges first (click the button in the first box).");
         }
     }
     
@@ -115,7 +123,8 @@ export default function Page() {
                             Download All Badges
                         </h5>
                     </div>
-                    <div>
+                    <div className="p-1 text-md flex">
+                        <p className="p-1">Front and back: </p>
                         <button
                             className="rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-400"
                             onClick={
@@ -125,6 +134,9 @@ export default function Page() {
                             >
                             Full
                         </button>
+                    </div>
+                    <div className="p-1 text-md flex">
+                        <p className="p-1">Backs Only: </p>
                         <button
                             className="rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-400"
                             onClick={
@@ -143,12 +155,25 @@ export default function Page() {
                             Download Individual Badges
                         </h5>
                     </div>
+                    <div className="p-1 text-md flex">
+                        <p className="p-1">Change Volunteer (type to search): </p>
+                        <Listbox value={selectedName} onChange={setSelectedName}>
+                            <ListboxButton className="border text-black p-1 border-black bg-gray-100">{namesList[selectedName]} </ListboxButton>
+                            <ListboxOptions anchor="bottom" className="bg-gray-100">
+                                {namesList.map((name, i) => (
+                                <ListboxOption key={i} value={i} className="data-[focus]:bg-blue-100">
+                                    {name}
+                                </ListboxOption>
+                                ))}
+                            </ListboxOptions>
+                        </Listbox>
+                    </div>
                     <div>
                         <button
                             className="rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-400"
                             onClick={
                                 () => {
-                                    clickIndividual(1);
+                                    clickIndividual();
                                 }}
                             >
                             Download
