@@ -53,6 +53,10 @@ export default function Page() {
     }
   }, [refreshToken]);
 
+  useEffect(() => {
+      setRefreshToken(Math.random());
+    }, [eventID]);
+
   const searchSyncInformation = (phoneNumber: string) => {
     const copy = syncData?.slice();
     copy?.map(
