@@ -8,11 +8,12 @@ export default function Page() {
   const timeout = 1000;
 
   const [data, setData] = useState<string[][]>();
+  const [isStale, setIsStale] = useState(false);
   const [refreshToken, setRefreshToken] = useState(0);
   const [isActive, setIsActive] = useState(true);
   const [writtenData, setWrittenData] = useState<string[][]>();
   const { eventID, setEvent } = myStore();
-  
+
   const [hasRunTest, setHasRunTest] = useState(false); // Track test execution
 
   const test = () => {
@@ -23,11 +24,19 @@ export default function Page() {
   };
 
   useEffect(() => {
+      setIsStale(true);
+      setTimeout(() => {
+        setData(undefined);
+      }, 1000);
+      setTimeout(() => setIsStale(false), 5000)
+    }, [eventID]);
+
+  useEffect(() => {
     if (isActive) {
       const fetchData = async () => {
         const fetchedData =
           eventID === 2 ? await getDaltonSync(eventID) : await getSync(eventID);
-        setData(fetchedData);
+        if (!isStale) setData(fetchedData);
       };
 
       fetchData().finally(() => {

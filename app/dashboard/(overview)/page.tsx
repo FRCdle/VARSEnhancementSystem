@@ -25,8 +25,11 @@ export default function Page() {
   const [data, setData] = useState<string[][]>();
   const [refreshToken, setRefreshToken] = useState(Math.random());
   const [syncRefreshToken, setSyncRefreshToken] = useState(Math.random());
+  const [homeRefreshToken, setHomeRefreshToken] = useState(Math.random());
   const [VOLCodeInput, setVOLCodeInput] = useState("");
   const [isActive, setIsActive] = useState(true);
+
+  const [isStale, setIsStale] = useState(false);
 
   const [hotelData, setHotelData] = useState<string[][]>();
   const [writtenHotelData, setWrittenHotelData] = useState<string[][]>();
@@ -44,11 +47,23 @@ export default function Page() {
     setKey((prevKey) => prevKey + 1); // Change key to force re-mount
   };
 
+
+  useEffect(() => {
+    setIsStale(true);
+    setTimeout(() => {
+      setData(undefined);
+      setHotelData(undefined);
+      setSyncData(undefined);
+    }, 1000);
+    setTimeout(() => setIsStale(false), 5000)
+  }, [eventID]);
+
+
   useEffect(() => {
     if (isActive) {
       if (eventID == 2) {
         getDaltonSync(eventID)
-        .then((syncData) => setSyncData(syncData))
+        .then((syncData) => {if (!isStale) setSyncData(syncData)})
         .finally(() => {
           setTimeout(() => setSyncRefreshToken(Math.random()), timeout);
         });
@@ -63,11 +78,7 @@ export default function Page() {
     } else {
       setTimeout(() => setSyncRefreshToken(Math.random()), timeout);
     }
-  }, [refreshToken]);
-
-  useEffect(() => {
-      setRefreshToken(Math.random());
-    }, [eventID]);
+  }, [syncRefreshToken]);
 
   const searchSyncInformation = (phoneNumber: string) => {
     const copy = syncData?.slice();
@@ -110,19 +121,19 @@ export default function Page() {
   useEffect(() => {
     if (isActive) {
       getHomePanel(eventID)
-        .then((data) => setData(data))
+        .then((data) => {if (!isStale) setData(data)})
         .finally(() => {
-          setTimeout(() => setRefreshToken(Math.random()), timeout);
+          setTimeout(() => setHomeRefreshToken(Math.random()), timeout);
         });
     } else {
-      setTimeout(() => setRefreshToken(Math.random()), timeout);
+      setTimeout(() => setHomeRefreshToken(Math.random()), timeout);
     }
-  }, [refreshToken]);
+  }, [homeRefreshToken]);
 
   useEffect(() => {
     if (isActive) {
       getHotelLocations(eventID)
-        .then((hotelData) => setHotelData(hotelData))
+        .then((hotelData) => {if (!isStale) setHotelData(hotelData)})
         .finally(() => {
           setTimeout(() => setRefreshToken(Math.random()), timeout);
         });

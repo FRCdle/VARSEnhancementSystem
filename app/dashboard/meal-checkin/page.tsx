@@ -12,10 +12,19 @@ import { useEffect, useState } from "react";
 export default function Page() {
   const timeout = 1000;
   const [data, setData] = useState<string[][]>();
+  const [isStale, setIsStale] = useState(false);
   const [refreshToken, setRefreshToken] = useState(Math.random());
   const [isActive, setIsActive] = useState(true);
 
   const { eventID, setEvent } = myStore();
+
+  useEffect(() => {
+      setIsStale(true);
+      setTimeout(() => {
+        setData(undefined);
+      }, 1000);
+      setTimeout(() => setIsStale(false), 5000)
+    }, [eventID]);
 
   const individualMealData = data?.slice(5, 14);
   individualMealData?.map(
@@ -48,7 +57,7 @@ export default function Page() {
   useEffect(() => {
     if (isActive) {
       getMealCheckin(eventID)
-        .then((data) => setData(data))
+        .then((data) => {if (!isStale) setData(data)})
         .finally(() => {
           setTimeout(() => setRefreshToken(Math.random()), timeout); 
         });
