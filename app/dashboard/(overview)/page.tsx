@@ -5,6 +5,8 @@ import {
   writeVolCode,
   getSync,
   writeSync,
+  getDaltonSync,
+  writeDaltonSync,
 } from "@/app/lib/google-sheets.action";
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
@@ -19,6 +21,7 @@ const DonutChart = dynamic(() => import("@/app/ui/charts/donutchart"), {
 });
 
 export default function Page() {
+  const timeout = 1000;
   const [data, setData] = useState<string[][]>();
   const [refreshToken, setRefreshToken] = useState(Math.random());
   const [syncRefreshToken, setSyncRefreshToken] = useState(Math.random());
@@ -43,13 +46,22 @@ export default function Page() {
 
   useEffect(() => {
     if (isActive) {
-      getSync(eventID)
+      if (eventID == 2) {
+        getDaltonSync(eventID)
         .then((syncData) => setSyncData(syncData))
         .finally(() => {
-          setTimeout(() => setSyncRefreshToken(Math.random()), 3000);
+          setTimeout(() => setSyncRefreshToken(Math.random()), timeout);
         });
+      } else {
+        getSync(eventID)
+        .then((syncData) => setSyncData(syncData))
+        .finally(() => {
+          setTimeout(() => setSyncRefreshToken(Math.random()), timeout);
+        });
+      }
+      
     } else {
-      setTimeout(() => setSyncRefreshToken(Math.random()), 3000);
+      setTimeout(() => setSyncRefreshToken(Math.random()), timeout);
     }
   }, [refreshToken]);
 
@@ -75,7 +87,6 @@ export default function Page() {
     if (!found) {
         const noEntry = ["NO ENTRY","NO ENTRY","NO ENTRY","NO ENTRY","NO ENTRY","NO ENTRY","NO ENTRY","NO ENTRY","NO ENTRY","NO ENTRY"];
         setIndividualSyncData(noEntry);
-      
     }
 
   };
@@ -101,10 +112,10 @@ export default function Page() {
       getHomePanel(eventID)
         .then((data) => setData(data))
         .finally(() => {
-          setTimeout(() => setRefreshToken(Math.random()), 3000);
+          setTimeout(() => setRefreshToken(Math.random()), timeout);
         });
     } else {
-      setTimeout(() => setRefreshToken(Math.random()), 3000);
+      setTimeout(() => setRefreshToken(Math.random()), timeout);
     }
   }, [refreshToken]);
 
@@ -113,10 +124,10 @@ export default function Page() {
       getHotelLocations(eventID)
         .then((hotelData) => setHotelData(hotelData))
         .finally(() => {
-          setTimeout(() => setRefreshToken(Math.random()), 3000);
+          setTimeout(() => setRefreshToken(Math.random()), timeout);
         });
     } else {
-      setTimeout(() => setRefreshToken(Math.random()), 3000);
+      setTimeout(() => setRefreshToken(Math.random()), timeout);
     }
   }, [refreshToken]);
 
@@ -495,9 +506,16 @@ export default function Page() {
 
               <button
                 onClick={() => {
-                  writeSync(writtenSyncData!, eventID).then(() =>
-                    setSyncRefreshToken(Math.random())
-                  );
+                  if (eventID == 2) {
+                    writeDaltonSync(writtenSyncData!, eventID).then(() =>
+                      setSyncRefreshToken(Math.random())
+                    );
+                  } else {
+                    writeSync(writtenSyncData!, eventID).then(() =>
+                      setSyncRefreshToken(Math.random())
+                    );
+                  }
+                  
                 }}
                 className="h-10 items-center rounded-lg bg-blue-500 px-4 text-m font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
               >

@@ -30,6 +30,11 @@ const links = [
     href: '/dashboard/bulkbadge',
     icon: DocumentDuplicateIcon,
   },
+  {
+    name: 'Sync',
+    href: '/dashboard/sync',
+    icon: UsersIcon
+  }
 ];
 
 export default function NavLinks() {

@@ -10,6 +10,7 @@ import { Button } from "@/app/ui/button";
 import { useEffect, useState } from "react";
 
 export default function Page() {
+  const timeout = 1000;
   const [data, setData] = useState<string[][]>();
   const [refreshToken, setRefreshToken] = useState(Math.random());
   const [isActive, setIsActive] = useState(true);
@@ -49,10 +50,10 @@ export default function Page() {
       getMealCheckin(eventID)
         .then((data) => setData(data))
         .finally(() => {
-          setTimeout(() => setRefreshToken(Math.random()), 3000); 
+          setTimeout(() => setRefreshToken(Math.random()), timeout); 
         });
     } else {
-      setTimeout(() => setRefreshToken(Math.random()), 3000);
+      setTimeout(() => setRefreshToken(Math.random()), timeout);
     }
   }, [refreshToken]);
 

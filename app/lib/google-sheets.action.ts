@@ -122,8 +122,16 @@ export async function writeVolunteerCell(cellData : string[][], row : number, co
     writeCellData('sync!' + String.fromCharCode(column + 65) + (row + 1), cellData, eventID);
 }
 
+export async function writeDaltonVolunteerCell(cellData : string[][], row : number, column : number, eventID: number) {
+    writeCellData('Dalton25!' + String.fromCharCode(column + 65) + (row + 1), cellData, eventID);
+}
+
 export async function writeVolunteerData(cellData : string[][], eventID: number) {
     writeCellData('sync!A1:i', cellData, eventID);
+}
+
+export async function writeDaltonVolunteerData(cellData : string[][], eventID: number) {
+    writeCellData('Dalton25!A1:i', cellData, eventID);
 }
 
 export async function getHomePanel(eventID: number) : Promise<string[][]> {
@@ -154,8 +162,16 @@ export async function getSync(eventID: number) : Promise<string[][]> {
     return getSheetData('sync!A1:I', eventID)
 }
 
+export async function getDaltonSync(eventID: number) : Promise<string[][]> {
+    return getSheetData('Dalton25!A1:I', eventID)
+}
+
 export async function writeSync(cellData : string[][], eventID: number) {
     writeCellData('sync!A1:I', cellData, eventID);
+}
+
+export async function writeDaltonSync(cellData : string[][], eventID: number) {
+    writeCellData('Dalton25!A1:I', cellData, eventID);
 }
 
 export async function getBulkbadgeLink(eventID: number) : Promise<string[][]> {
