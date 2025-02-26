@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { badgePDFtoBlobs } from '@/app/lib/pdf-utils';
 import { getAdminPin, getBulkbadgeLink } from '@/app/lib/google-sheets.action';
 import { myStore } from '@/app/event-context';
@@ -18,14 +18,19 @@ async function getLink(pdfBlob: Blob): Promise<HTMLAnchorElement> {
 
 export default function Page() {
 
+    const { eventID, setEvent } = myStore();
+
+    // Modes: 1 for unloaded, 2 for normal options, 3 for check-in, 4 for custom badge
+    const [mode, setMode] = useState(1);
+
     const [response, setResponse] = useState<string>("");
-    const [waitMessage, setWaitMessage] = useState<string>("Press button to load all badge PDFs. This process can take up to 30 seconds.");
+    const [waitMessage, setWaitMessage] = useState<string>("");
 
     const [namesList, setNamesList] = useState<string[]>(["none"]);
     const [selectedName, setSelectedName] = useState(0);
     const [blobs, setBlobs] = useState<{full: Blob, backsOnly: Blob, individual: Blob[]}>();
 
-    const { eventID, setEvent } = myStore();
+
 
     const handleClick = async () => {
         setWaitMessage("Loading Badge PDFs. This process can take up to 30 seconds.");
@@ -42,6 +47,7 @@ export default function Page() {
             setResponse(data);
         } catch (error) {
             console.error('Fetch error:', error);
+            setWaitMessage("Something went wrong. Please try again.")
             setResponse('Error fetching data.'); 
         }
     }
@@ -82,26 +88,27 @@ export default function Page() {
                 const [PDF, ...tempNamesList] = temp;
                 setNamesList(tempNamesList);
                 badgePDFtoBlobs(PDF, tempNamesList.length)
-                    .then((blobs) => setBlobs(blobs));
-                setWaitMessage("Done!");
+                    .then((blobs) => {
+                        setBlobs(blobs);
+                        setWaitMessage("Done");
+                        setMode(2);
+                    })
+                
             }
         }, [response]);
-
-    return (
-        <main>
-            <h1 className="mb-2 text-xl md:text-2xl text-black">
-                BulkBadge PDF Generator
-            </h1>
-            <div className='mt-4 grid grid-cols-3 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5'>
-
+    
+    let content;
+    if (mode == 1) {
+        content = (
+            <>
                 <div className="col-span-3 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-3">
                     <div className="mb-3 justify-between gap-4 sm:flex">
                         <h5 className="text-xl font-semibold text-black ">
-                            Create PDFs
+                            Please choose an option (more coming soon):
                         </h5>
                     </div>
                     <div className="text-md">
-                        {waitMessage}
+                    <p>Download all badges in bulk, or filter individual badges by name</p>
                     </div>
                     <div className='mb-3 inline-flex align-middle text-md'>
                         <button
@@ -114,9 +121,15 @@ export default function Page() {
                             Load Badges
                         </button>
                     </div>
-                    
+                    <div className="text-md">
+                        {waitMessage}
+                    </div>
                 </div>
-
+            </>
+        )
+    } else if (mode == 2) {
+        content = (
+            <>
                 <div className="col-span-3 rounded-sm border border-stroke bg-white px-8 pb-5 pt-8 shadow-xl sm:px-7.5 xl:col-span-3">
                     <div className="mb-3 justify-between gap-4 sm:flex">
                         <h5 className="text-xl font-semibold text-black ">
@@ -180,7 +193,16 @@ export default function Page() {
                         </button>
                     </div>
                 </div>
-
+            </>
+        )
+    }
+    return (
+        <main>
+            <h1 className="mb-2 text-xl md:text-2xl text-black">
+                BulkBadge PDF Generator
+            </h1>
+            <div className='mt-4 grid grid-cols-3 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5'>
+                {content}
             </div>
         </main>
     );
