@@ -33,8 +33,9 @@ export async function badgePDFtoBlobs(base64PDF: string, length: number) : Promi
 
     const resize = pages.map((page, i) => {
         const { width, height } = page.getSize();
-        page.setSize(width * (3.7/8.5), height * (2.6/11));
-        page.translateContent(-43, -562);
+        // page.setSize(width * (3.7/8.5), height * (2.6/11));
+        page.setSize(width * (4.08/8.5), height * (1.98/11));
+        page.translateContent(-49, -597);
     });
     
     // Remove all extra pages, given the number of volunteers.
