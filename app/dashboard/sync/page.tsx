@@ -28,7 +28,7 @@ export default function Page() {
       setTimeout(() => {
         setData(undefined);
       }, 1000);
-      setTimeout(() => setIsStale(false), 5000)
+      setTimeout(() => setIsStale(false), 1000)
     }, [eventID]);
 
   useEffect(() => {
@@ -116,7 +116,7 @@ export default function Page() {
                     onChange={
                         (e) => handleWrittenData(rowKey, cellKey, e.target.value)
                     }
-                    className="h-8 mr-3 px-0.5 text-xs"
+                    className="h-8 mr-3 w-full px-2 text-xs"
                     name="cell-input"
                     type="text"
                     />
