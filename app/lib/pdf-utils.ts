@@ -55,9 +55,9 @@ export async function badgePDFtoBlobs(base64PDF: string, length: number) : Promi
     const backsBlob = new Blob( [backsPDFBytes], { type: "application/pdf" });
 
     const individualBlobs: Blob[] = [];
-    for (let i = 0; i < length; i += 2) {
+    for (let i = 0; i < length; i += 1) {
         const tempPDF = await PDFDocument.create();
-        const copiedPages = await tempPDF.copyPages(fullPDF, [i, i+1]);
+        const copiedPages = await tempPDF.copyPages(fullPDF, [2*i, 2*i+1]);
         const [firstPage, secondPage] = copiedPages;
         tempPDF.addPage(firstPage);
         tempPDF.addPage(secondPage);
