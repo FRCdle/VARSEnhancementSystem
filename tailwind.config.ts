@@ -11,6 +11,7 @@ const config: Config = {
       gridTemplateColumns: {
         '15': 'repeat(15, 150px)',
         '16': 'repeat(16, 150px)',
+        '30': 'repeat(30, 100px)'
       },
       colors: {
         "sidenav-color": "#1E2433",

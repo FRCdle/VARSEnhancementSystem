@@ -177,3 +177,7 @@ export async function writeDaltonSync(cellData : string[][], eventID: number) {
 export async function getBulkbadgeLink(eventID: number) : Promise<string[][]> {
     return getSheetData('Home!A29', eventID);
 }
+
+export async function getScans(eventID: number) : Promise<string[][]> {
+    return getSheetData('Scans!A1:AH', eventID);
+}
