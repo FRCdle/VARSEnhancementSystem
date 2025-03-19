@@ -14,7 +14,18 @@ export default function Page() {
   const [writtenData, setWrittenData] = useState<string[][]>();
   const { eventID, setEvent } = myStore();
 
+  const [newRow, setNewRow] = useState<string[]>();
+
   const [hasRunTest, setHasRunTest] = useState(false); // Track test execution
+
+  const writeNewEntry = () => {
+    const newRow = ["<Role>", "Done","","<Name>","","","<Note>","<Email>","<Phone Number>"];
+    const copy = data?.map(row => [...row]);
+    copy?.push(newRow);
+    setData(copy);
+    setWrittenData(copy);
+    writeVolunteerData(copy!, eventID);
+  }
 
   const test = () => {
     if (data) {
@@ -82,6 +93,7 @@ export default function Page() {
     <h1 className="mb-2 text-xl md:text-2xl text-black">
       Volunteer Information 
     </h1>
+    
     <div className={`text-xs rounded-sm bg-white px-5 pb-2.5 pt-6 shadow-default`}>
         <button
             onClick={() => {
@@ -95,12 +107,19 @@ export default function Page() {
                     );
                 }
             }}
-            className="h-10 mb-3 items-center rounded-lg bg-blue-500 px-4 text-m font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+            className="h-10 mb-3 mr-3 items-center rounded-lg bg-blue-500 px-4 text-m font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
             >
             Update Information
         </button>
-        
-      <div className="overflow-scroll flex flex-col">
+        <button
+            onClick={() => {
+                writeNewEntry();
+            }}
+            className="h-10 mb-3 items-center rounded-lg bg-blue-500 px-4 text-m font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+            >
+            Add New Entry
+        </button>
+      <div className="overflow-scroll flex flex-col mb-3 ">
         {data?.map((row : string[], rowKey : number) => (
           <div
             className={`grid grid-cols-15`}
@@ -127,6 +146,31 @@ export default function Page() {
           </div>
         ))}
       </div>
+
+      <button
+            onClick={() => {
+                if (eventID == 2) {
+                  writeDaltonVolunteerData(writtenData!, eventID).then(() =>
+                    setRefreshToken(Math.random())
+                    );
+                } else {
+                  writeVolunteerData(writtenData!, eventID).then(() =>
+                    setRefreshToken(Math.random())
+                    );
+                }
+            }}
+            className="h-10 mb-3 mr-3 items-center rounded-lg bg-blue-500 px-4 text-m font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+            >
+            Update Information
+        </button>
+        <button
+            onClick={() => {
+                writeNewEntry();
+            }}
+            className="h-10 mb-3 items-center rounded-lg bg-blue-500 px-4 text-m font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+            >
+            Add New Entry
+        </button>
     </div>
   </div> </IdleTimer>
   
