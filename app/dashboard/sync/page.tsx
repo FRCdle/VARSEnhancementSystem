@@ -24,7 +24,11 @@ export default function Page() {
     copy?.push(newRow);
     setData(copy);
     setWrittenData(copy);
-    writeVolunteerData(copy!, eventID);
+    if (eventID == 2) {
+        writeDaltonVolunteerData(copy!, eventID);
+    } else {
+        writeVolunteerData(copy!, eventID);
+    }
   }
 
   const test = () => {
