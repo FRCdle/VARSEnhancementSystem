@@ -13,10 +13,11 @@ export default function SideNav() {
 
 
   return (
-    <div className=" flex h-full flex-col bg-sidenav-color px-3 py-4 md:px-2">
+    <div className="flex h-full flex-col bg-sidenav-color px-3 py-4 md:px-2">
       <Link
-        className="mb-2 flex h-18 items-end justify-start rounded-md bg-sidenav-color p-4 md:h-38"
-        href="/"
+        className="mb-2 flex h-18 items-end justify rounded-md bg-sidenav-color p-4 md:h-38"
+        href="https://sites.google.com/gafirst.org/vars/home"
+        target="_blank"
       >
         <div className="w-32 md:w-40">
           <GAFirstLogoDark/>
